@@ -5,8 +5,8 @@
 	.mid-sec
 		h2 FAQs
 		.questions
-			.question(v-for='(qanda, index) in qandas' :key='index')
-				QandA
+			qandas
+			
 	.btm-sec
 		hr
 		h2 Need More Help?
@@ -14,16 +14,38 @@
 			button Contact Us
 </template>
 
+
+
+
+
+
+
 <script lang='ts'>
-import {defineComponent} from 'vue'
+import {defineComponent, computed} from 'vue'
 import QandA from '@/components/QandA.vue'
+import {useStore} from 'vuex'
+
 export default defineComponent({
 	name: "HelpPage",
 	components: {
 		QandA,
+	},
+	setup() {
+		const store = useStore()
+		computed(() => store.dispatch('qanda/getQAs'))
+		const qandas = store.getters['qanda/getQAs']
+
+		return { store,qandas}
 	}
 })
 </script>
+
+
+
+
+
+
+
 
 <style lang='stylus' scoped>
 .helpcomponent
