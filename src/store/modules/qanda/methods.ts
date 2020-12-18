@@ -15,20 +15,19 @@ export const mutations: Mutation = {
 }
 
 export const actions: Action = {
-  async postQuestion({dispatch}, question) {
+  async PostQuestion({dispatch}, question) {
     await axios.post(QAURL, question)
     .then(() => {
-      dispatch('getQAs')
+      dispatch('GetQAs')
     })
     .catch(error => {
       console.log(error + " post question error")
     })
   },
 
-  async getQAs({commit}) {
-    await axios.get(QAURL)
+  GetQAs({commit}) {
+    axios.get(QAURL)
     .then(response => {
-			console.log('huh')
       commit('setQAs', response.data)
     }).catch(error => {
 			console.log(error + " getQAs error")

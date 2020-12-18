@@ -4,18 +4,27 @@
 		h1 Need Help?
 	.mid-sec
 		h2 FAQs
-		.questions
-			qandas
-			
+		.qandas(v-for="(qanda, index) in qandas" :key="index+=1")
+			QandA(
+				:index="index"
+				:question="qanda.question"
+				:answers="qanda.answers"
+			)
 	.btm-sec
 		hr
 		h2 Need More Help?
+		.form
+			form(@submit.prevent="submit")
+				.textarea
+					textarea(name='question' rows='5' cols='70' 
+								v-model="form.question"
+								placeholder="Write your question here...")
+				.submit-button
+					button(@click="submit") Submit
+		p OR
 		router-link(to='/contact')
 			button Contact Us
 </template>
-
-
-
 
 
 
@@ -32,10 +41,26 @@ export default defineComponent({
 	},
 	setup() {
 		const store = useStore()
-		computed(() => store.dispatch('qanda/getQAs'))
-		const qandas = store.getters['qanda/getQAs']
+		store.dispatch('qanda/GetQAs')
+		const qandas = computed(() => store.getters['qanda/getQAs'])
+		const form = {
+			question: "",
+		}
+		const submit = () => {
+			const QuestionForm = new FormData()
+			QuestionForm.append('question', form.question)
+			try {
+				store.dispatch('qanda/PostQuestion', QuestionForm)
+				.then(() => {
+					form.question = ""
+				})
+			} catch (error) {
+				console.log(error + " This is error from dispatch")
+			}
+			
+		}
 
-		return { store,qandas}
+		return { store,qandas,submit,form, }
 	}
 })
 </script>
@@ -55,8 +80,18 @@ export default defineComponent({
 		h2
 			margin 20px
 	.btm-sec
+		.form
+			p 
+				margin 20px 0
+				color rgb(146, 146, 146)
+				font-size 15px
+			.submit-button
+				button
+					margin-top 5px
+					font-size 13px
+					padding 5px
 		button
-			margin 30px
+			margin 0
 			font-weight bold
 			font-size 15px
 			color rgb(255,255,255)

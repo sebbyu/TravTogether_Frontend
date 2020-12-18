@@ -2,16 +2,17 @@
 .qanda
 	.question
 		.q-logo
-			img(src="@/assets/question-logo.png" alt="question-logo")
+			//- img(src="@/assets/question-logo.png" alt="question-logo")
 		.q-text
-			h3 {{ question }}
+			h3 {{ index }} - {{ question }}
 		.dropdown-button(@click='answerQuestion')
 			img(src="@/assets/dropdown-button.png" alt="dropdown-button")
-	.answer(v-if='answered')
-		.a-logo
-			img(src="@/assets/light-bulb-logo.png" alt="light-bulb-logo")
-		.a-text
-			h4 {{ answer }}
+	.answers(v-if='answered')
+		.answer(v-for="(answer, index) in answers" :key='index')
+			.a-logo
+				//- img(src="@/assets/light-bulb-logo.png" alt="light-bulb-logo")
+			.a-text
+				h4 A: {{ answer }}
 </template>
 
 
@@ -25,8 +26,9 @@ import {defineComponent, ref} from 'vue'
 export default defineComponent({
 	name: "QandA",
 	props: {
+		index: Number,
 		question: String,
-		answer: String,
+		answers: Array,
 	},
 	setup() {
 
@@ -66,16 +68,18 @@ export default defineComponent({
 				height 15px
 				width auto
 				cursor pointer
-	.answer
-		display flex
-		align-items center
-		justify-content center
-		.a-logo
-			img
-				height 30px
-				width auto
-		.a-text
-			margin 0px 15px
+	.answers
+		line-height 0
+		.answer
+			display flex
+			align-items center
+			justify-content center
+			.a-logo
+				img
+					height 30px
+					width auto
+			.a-text
+				margin 0px 15px
 </style>
 
 
