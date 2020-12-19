@@ -85,6 +85,9 @@ export default defineComponent({
 				margin 20px 0
 				color rgb(146, 146, 146)
 				font-size 15px
+			.textarea
+				textarea
+					background-color white
 			.submit-button
 				button
 					margin-top 5px

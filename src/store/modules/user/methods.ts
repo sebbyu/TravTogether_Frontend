@@ -5,6 +5,8 @@ import axios from 'axios'
 const USERURL="http://127.0.0.1:8000/users/"
 
 export const getters: Getter = {
+  isAuthenticated: state => !!state.user,
+// =====================================================
   getUser: state => state.user,
 // =====================================================
   getAllUsers: state => state.userList,

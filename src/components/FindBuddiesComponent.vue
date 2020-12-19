@@ -17,7 +17,8 @@
 	.mid-sec
 		.results(v-for="(user, index) in userList" :key="index")
 			.user
-				.profile-picturev(style="border:1px solid grey;")
+				.profile-picture(style="border:1px solid grey;"
+				@click="UserDetail")
 					.has_image(v-if="user.profile_picture")
 						img(:src="user.profile_picture"
 							style="width:180px;height:180px")
@@ -82,6 +83,7 @@ export default defineComponent({
 
 <style lang='stylus' scoped>
 .findbuddiescomponent
+	// filter blur(20px)
 	.top-sec
 		.categories
 			display flex
@@ -99,6 +101,7 @@ export default defineComponent({
 						margin 43px
 						border none
 						border-radius 30px
+						background-color white
 						transition 0.2s ease
 						&:hover
 							color white
@@ -125,6 +128,8 @@ export default defineComponent({
 			.user
 				margin: 5px
 				.profile-picture
+					margin 0
+					cursor pointer
 				.name
 					display flex
 					justify-content center
