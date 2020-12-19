@@ -3,13 +3,19 @@ import {RootState} from '@/store/types'
 
 export interface State {
 	user: User | null;
+	userList: User[];
 }
 
 export interface User {
-	username: string;
-	nickname: string;
 	email: string;
+	nickname: string;
 	profileImage: string,
+	gender: string;
+	age: string;
+	ethnicity: string;
+	location: string;
+	password: string;
+	
 }
 
 
