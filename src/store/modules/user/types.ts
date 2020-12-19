@@ -9,7 +9,7 @@ export interface State {
 export interface User {
 	email: string;
 	nickname: string;
-	profileImage: string,
+	profile_picture: string,
 	gender: string;
 	age: string;
 	ethnicity: string;

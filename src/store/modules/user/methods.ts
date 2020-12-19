@@ -6,10 +6,9 @@ const USERURL="http://127.0.0.1:8000/users/"
 
 export const getters: Getter = {
   getUser: state => state.user,
-  // =====================================================
-  getAllUsers: state => state.userList
-  // =====================================================
-
+// =====================================================
+  getAllUsers: state => state.userList,
+// =====================================================
 }
 
 
@@ -25,7 +24,6 @@ export const mutations: Mutation = {
     state.userList = users
   },
 // =====================================================
-
 }
 
 
@@ -76,5 +74,5 @@ export const actions: Action = {
       console.log(error + "ERROR GETTING ALL USERS")
     })
   },
-// ===================================================== 
+// =====================================================
 }

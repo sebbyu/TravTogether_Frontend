@@ -18,8 +18,12 @@
 		.results(v-for="(user, index) in userList" :key="index")
 			.user
 				.profile-picturev(style="border:1px solid grey;")
-					img(src="@/assets/explore.png" alt='user_image' 
-								style="width:180px;height:auto")
+					.has_image(v-if="user.profile_picture")
+						img(:src="user.profile_picture"
+							style="width:180px;height:180px")
+					.no_image(v-else)
+						img(src="@/assets/empty-profile.png"
+							style="width:180px;height:180px")
 				.name(style="border:1px solid grey;border-top:none;border-bottom:none")
 					p {{ user.nickname }}
 					.male(v-if="user.gender == 'Male'")
@@ -66,10 +70,10 @@ export default defineComponent({
 				filterBool: ref(false),
 			}) as Filter,
 		]
-		store.dispatch('user/GetAllUsers')
+		store.dispatch("user/GetAllUsers")
 		const userList = computed(() => store.getters['user/getAllUsers'])
 
-		return {search,userList,filters,}
+		return {search,filters,userList,}
 	}
 })
 </script>
