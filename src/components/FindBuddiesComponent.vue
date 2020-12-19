@@ -3,10 +3,11 @@
 	.top-sec
 		h1 Search Buddies
 		.categories
-			p(:class="{selected: countryFilter}" @click="countryFilter = !countryFilter") Country
-			p(:class="{selected: cityFilter}" @click="cityFilter = !cityFilter") City
-			p(:class="{selected: nameFilter}" @click="nameFilter = !nameFilter") Name
-			p(:class="{selected: genderFilter}" @click="genderFilter = !genderFilter") Gender
+			.filters(v-for="(filter, index) in filters" :key="index")
+				.filter
+					p(:class="{selected: filter.filterBool}"
+					@click="filter.filterBool = !filter.filterBool") {{ filter.filter }}
+			
 		.search
 			input#search-box(type='search' 
 						name='search-box'
@@ -42,23 +43,42 @@
 
 
 <script lang='ts'>
-import {defineComponent, ref, computed} from 'vue'
+import {defineComponent, ref, computed, reactive} from 'vue'
 import {useStore} from 'vuex'
 export default defineComponent({
 	name: "FindBuddiesComponent",
 	setup() {
 		const store = useStore()
 		const search = ""
-		const countryFilter = ref(false)
-		const cityFilter = ref(false)
-		const nameFilter = ref(false)
-		const genderFilter = ref(false)
+		interface Filter {
+			filter: string;
+			filterBool: boolean;
+		}
+		
+		const filters = [
+			reactive({
+				filter: "Country",
+				filterBool: ref(false),
+			}) as Filter,
+			reactive({
+				filter: "City",
+				filterBool: ref(false),
+			}) as Filter,
+			reactive({
+				filter: "Name",
+				filterBool: ref(false),
+			}) as Filter,
+			reactive({
+				filter: "Gender",
+				filterBool: ref(false),
+			}) as Filter,
+		]
 
 		store.dispatch('user/GetAllUsers')
 		const userList = computed(() => store.getters['user/getAllUsers'])
 
 
-		return {search,countryFilter,cityFilter,nameFilter,genderFilter,userList}
+		return {search,userList,filters,}
 
 	}
 
@@ -81,21 +101,26 @@ export default defineComponent({
 		.categories
 			display flex
 			justify-content center
-			.selected
-				color white
-				background-color rgb(123,165,221)
-			p
-				cursor pointer
-				font-weight bold
-				padding 7px
-				margin 43px
-				color rgb(123,165,221)
-				border none
-				border-radius 30px
-				transition 0.2s ease
-				&:hover
-					color white
-					background-clip rgb(123,165,221)
+			.filters
+				.filter
+					.selected
+						color white 
+						background-color rgb(123,165,221)
+						border-radius 10px
+						transition 0.2s
+					cursor pointer
+					font-weight bold
+					padding 7px
+					margin 43px
+					color rgb(123,165,221)
+					border none
+					border-radius 30px
+					transition 0.2s ease
+					&:hover
+						color white
+						background-clip rgb(123,165,221)
+	
+		
 		.search
 			display flex
 			justify-content center
