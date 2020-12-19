@@ -11,7 +11,7 @@
 		.search
 			input#search-box(type='search' 
 						name='search-box'
-						placeholder='Search'
+						placeholder='Search (Country, City, Name, Gender)'
 						v-model="search")
 			img(src='@/assets/search-logo.png' alt='search-logo')
 	.mid-sec
@@ -36,12 +36,6 @@
 
 
 
-
-
-
-
-
-
 <script lang='ts'>
 import {defineComponent, ref, computed, reactive} from 'vue'
 import {useStore} from 'vuex'
@@ -54,7 +48,6 @@ export default defineComponent({
 			filter: string;
 			filterBool: boolean;
 		}
-		
 		const filters = [
 			reactive({
 				filter: "Country",
@@ -73,25 +66,13 @@ export default defineComponent({
 				filterBool: ref(false),
 			}) as Filter,
 		]
-
 		store.dispatch('user/GetAllUsers')
 		const userList = computed(() => store.getters['user/getAllUsers'])
 
-
 		return {search,userList,filters,}
-
 	}
-
 })
 </script>
-
-
-
-
-
-
-
-
 
 
 
@@ -104,23 +85,20 @@ export default defineComponent({
 			.filters
 				.filter
 					.selected
-						color white 
-						background-color rgb(123,165,221)
-						border-radius 10px
-						transition 0.2s
-					cursor pointer
-					font-weight bold
-					padding 7px
-					margin 43px
-					color rgb(123,165,221)
-					border none
-					border-radius 30px
-					transition 0.2s ease
-					&:hover
 						color white
-						background-clip rgb(123,165,221)
-	
-		
+						transition 0.2s
+						background-color rgb(123,165,221)
+						padding 3px
+					p
+						cursor pointer
+						font-weight bold
+						margin 43px
+						border none
+						border-radius 30px
+						transition 0.2s ease
+						&:hover
+							color white
+							background-clip rgb(123,165,221)
 		.search
 			display flex
 			justify-content center
@@ -158,5 +136,4 @@ export default defineComponent({
 					img
 						width 20px
 						height 20px
-						
 </style>

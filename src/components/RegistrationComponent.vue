@@ -11,7 +11,7 @@
           input(type='text' name='email' placeholder='Email Address')
         .nickname
           input(type='text' name='nickname' placeholder='Nickname')
-          strong (will be set to your email if left blank)
+          strong (will be set to your email name if left blank)
         .profile_picture
           label(for='profile_picture') Profile Picture 
           input(type='file' name='profile_picture' accept="image/*")
@@ -80,7 +80,7 @@ export default defineComponent({
     .form
       form
         .nickname
-          margin-left 280px
+          margin-left 330px
         .email, .nickname, .password
           input
             margin 5px
