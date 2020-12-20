@@ -20,7 +20,7 @@
 								v-model="form.question"
 								placeholder="Write your question here...")
 				.submit-button
-					button(@click="submit") Submit
+					button(type="submit") Submit
 		p OR
 		router-link(to='/contact')
 			button Contact Us

@@ -14,6 +14,7 @@
     "pug": "^3.0.0",
     "pug-plain-loader": "^1.1.0",
     "register-service-worker": "^1.7.1",
+    "slugify": "^1.4.6",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",

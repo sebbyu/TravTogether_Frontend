@@ -1,8 +1,9 @@
 import {Getter, Mutation, Action} from '@/store/modules/user/types'
 import axios from 'axios'
+import slugify from 'slugify'
 
 
-const USERURL="http://127.0.0.1:8000/users/"
+const HOSTURL="http://127.0.0.1:8000/"
 
 export const getters: Getter = {
   isAuthenticated: state => !!state.user,
@@ -26,6 +27,10 @@ export const mutations: Mutation = {
     state.userList = users
   },
 // =====================================================
+  logout(state) {
+    state.user = null
+  },
+// =====================================================
 }
 
 
@@ -34,6 +39,7 @@ export const mutations: Mutation = {
 
 
 export const actions: Action = {
+  // eslint-disable-next-line
 	async RegisterNewUser({commit}, User) {
     const userform = new FormData()
     userform.append('email', User.email)
@@ -45,36 +51,45 @@ export const actions: Action = {
     userform.append('location', User.location)
     userform.append('password', User.password)
     try {
-      await axios.post(USERURL, userform)
-      .then(() => {
-        console.log('Register User')
-      })
-      .catch(error => {
-        console.log(error + "REGISTER ERROR")
-      })
+      await axios.post(HOSTURL+'users/', userform)
+      console.log('Register User')
     } catch (error) {
       console.log(error + "post error")
     }
   },
 // =====================================================
-  async GetUser({commit}, User) {
-    axios.get(USERURL, User)
-    .then(response => {
-      commit('setUser', response.data)
-    })
-    .catch(error => {
-      console.log(error + "GET USER ERROR")
-    })
+  async GetUser({commit}, userForm) {
+    const slug = slugify(userForm.get('email').split('@')[0])
+    try {
+      const response = await axios.get(HOSTURL+'users/'+slug)
+      await commit('setUser', response.data)
+    } catch (error) {
+      console.log(error + " GET USER ERROR")
+    }
   },
 // =====================================================
   async GetAllUsers({commit}) {
-    await axios.get(USERURL)
-    .then(response => {
+    try {
+      const response = await axios.get(HOSTURL+'users/')
       commit('setAllUsers', response.data)
-    })
-    .catch(error => {
-      console.log(error + "ERROR GETTING ALL USERS")
-    })
+    } catch (error) {
+      console.log(error + " ERROR GETTING ALL USERS")
+    }
   },
 // =====================================================
+  async Login({dispatch}, User) {
+    const userForm = new FormData()
+    userForm.append('email', User.email)
+    userForm.append('password', User.password)
+    try {
+      await axios.post(HOSTURL+"authentication/", userForm)
+      await dispatch('GetUser', userForm)
+    } catch(error) {
+      console.log(error + " ERROR LOGGING IN")
+    }
+  },
+// =====================================================
+  Logout({commit}) {
+    commit("logout")
+  },
 }

@@ -56,7 +56,7 @@
         .password
           input(type='password' name='password' placeholder='Password')
         .create-button
-          button(@click='submit') Register
+          button(type='submit') Register
   .btm-sec
     hr
 </template>
