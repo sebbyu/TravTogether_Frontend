@@ -26,15 +26,22 @@
 						img(src="@/assets/empty-profile.png"
 							style="width:180px;height:180px")
 				.name(style="border:1px solid grey;border-top:none;border-bottom:none")
-					p {{ user.nickname }}
+					p(v-if="user.nickname == null") X
+					p(v-else-if="user.nickname.length > 15") 
+						| {{ user.nickname.slice(0,15) }} ...
+					p(v-else) {{ user.nickname }}
 					.male(v-if="user.gender == 'Male'")
 						img(src="@/assets/male-logo.png" alt="gender logo")
 					.female(v-else-if="user.gender == 'Female'")
 						img(src="@/assets/female-logo.png" alt="gender logo")
+					.other(v-else)
+						img(src="@/assets/registration.png" alt="gender logo")
 				.location(style="border:1px solid grey;border-top:none;")
 					img(src="@/assets/location-logo.png" alt="location logo")
 					p(v-if="user.location == null") X
-					p {{ user.location }}
+					p(v-else-if="user.location.length > 20") 
+						| {{ user.location.slice(0,20) }} ...
+					p(v-else) {{ user.location }}
 	.btm-sec
 </template>
 
