@@ -1,7 +1,7 @@
 import {Getter, Mutation, Action} from '@/store/modules/qanda/types'
 import axios from 'axios'
 
-const QAURL = "http://127.0.0.1:8000/questions/"
+const QANDASURL = "http://127.0.0.1:8000/questions/"
 
 export const getters: Getter = {
   getQAs: state => state.QAs,
@@ -16,7 +16,7 @@ export const mutations: Mutation = {
 
 export const actions: Action = {
   async PostQuestion({dispatch}, question) {
-    await axios.post(QAURL, question)
+    await axios.post(QANDASURL, question)
     .then(() => {
       dispatch('GetQAs')
     })
@@ -26,7 +26,7 @@ export const actions: Action = {
   },
 
   GetQAs({commit}) {
-    axios.get(QAURL)
+    axios.get(QANDASURL)
     .then(response => {
       commit('setQAs', response.data)
     }).catch(error => {

@@ -53,20 +53,48 @@
             option(value="Latino") Hispanic / Latino
             option(value="Native2") Native Hawaiian / Other Pacific Islander
             option(value="White") White
+        .test(v-for="(location, index) in locations" :key="index")
+          .testa
+            | {{ location.city }}, {{ location.country }}
         .password
           input(type='password' name='password' placeholder='Password')
         .create-button
           button(type='submit') Register
+    
   .btm-sec
+    
     hr
 </template>
 
+
+
+
 <script lang='ts'>
-import {defineComponent} from 'vue'
+import {defineComponent,ref} from 'vue'
+import { parse } from "papaparse"
+
 export default defineComponent({
   name: "RegistrationComponent",
+  setup() {
+
+    const locations = ref()
+
+    parse("http://127.0.0.1:8000/media/locations/worldcities_small.csv", {
+      header: true,
+      download: true,
+      skipEmptyLines: true,
+      dynamicTyping: true,
+      complete: (results) => {
+        locations.value = results.data
+      }
+    })
+    return {locations,}
+  }
 })
 </script>
+
+
+
 
 <style lang='stylus' scoped>
 .registrationcomponent
@@ -114,7 +142,4 @@ export default defineComponent({
             transition: 0.2s ease
             &:hover
               background-color rgb(79,137,212)
-
-
-
 </style>

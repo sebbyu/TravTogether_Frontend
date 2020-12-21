@@ -2,8 +2,9 @@ import {Getter, Mutation, Action} from '@/store/modules/user/types'
 import axios from 'axios'
 import slugify from 'slugify'
 
+const USERSURL = "http://127.0.0.1:8000/users/"
+const AUTHENTICATIONURL = "http://127.0.0.1:8000/authentication/"
 
-const HOSTURL="http://127.0.0.1:8000/"
 
 export const getters: Getter = {
   isAuthenticated: state => !!state.user,
@@ -51,7 +52,7 @@ export const actions: Action = {
     userform.append('location', User.location)
     userform.append('password', User.password)
     try {
-      await axios.post(HOSTURL+'users/', userform)
+      await axios.post(USERSURL, userform)
       console.log('Register User')
     } catch (error) {
       console.log(error + "post error")
@@ -61,7 +62,7 @@ export const actions: Action = {
   async GetUser({commit}, userForm) {
     const slug = slugify(userForm.get('email').split('@')[0])
     try {
-      const response = await axios.get(HOSTURL+'users/'+slug)
+      const response = await axios.get(USERSURL+slug)
       await commit('setUser', response.data)
     } catch (error) {
       console.log(error + " GET USER ERROR")
@@ -70,7 +71,7 @@ export const actions: Action = {
 // =====================================================
   async GetAllUsers({commit}) {
     try {
-      const response = await axios.get(HOSTURL+'users/')
+      const response = await axios.get(USERSURL)
       commit('setAllUsers', response.data)
     } catch (error) {
       console.log(error + " ERROR GETTING ALL USERS")
@@ -82,7 +83,7 @@ export const actions: Action = {
     userForm.append('email', User.email)
     userForm.append('password', User.password)
     try {
-      await axios.post(HOSTURL+"authentication/", userForm)
+      await axios.post(AUTHENTICATIONURL, userForm)
       await dispatch('GetUser', userForm)
     } catch(error) {
       console.log(error + " ERROR LOGGING IN")
