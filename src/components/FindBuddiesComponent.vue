@@ -19,8 +19,8 @@
 			.user
 				.profile-picture(style="border:1px solid grey;"
 				@click="UserDetail")
-					.has_image(v-if="user.profile_picture")
-						img(:src="user.profile_picture"
+					.has_image(v-if="user.profilePicture")
+						img(:src="user.profilePicture"
 							style="width:180px;height:180px")
 					.no_image(v-else)
 						img(src="@/assets/empty-profile.png"

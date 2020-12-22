@@ -13,6 +13,8 @@ export const getters: Getter = {
 // =====================================================
   getAllUsers: state => state.userList,
 // =====================================================
+  getErrorMessage: state => state.errorMessage,
+// =====================================================
 }
 
 
@@ -32,6 +34,10 @@ export const mutations: Mutation = {
     state.user = null
   },
 // =====================================================
+  setErrorMessage(state, errorMessage) {
+    state.errorMessage = errorMessage
+  },
+// =====================================================
 }
 
 
@@ -40,12 +46,11 @@ export const mutations: Mutation = {
 
 
 export const actions: Action = {
-  // eslint-disable-next-line
 	async RegisterNewUser({commit}, User) {
     const userform = new FormData()
     userform.append('email', User.email)
     userform.append('nickname', User.nickname)
-    userform.append('profileImage', User.profileImage)
+    userform.append('profilePicture', User.profilePicture)
     userform.append('gender', User.gender)
     userform.append('age', User.age)
     userform.append('ethnicity', User.ethnicity)
@@ -54,8 +59,10 @@ export const actions: Action = {
     try {
       await axios.post(USERSURL, userform)
       console.log('Register User')
+      commit('setErrorMessage', "")
     } catch (error) {
-      console.log(error + "post error")
+      console.log(error.message + " post error")
+      commit('setErrorMessage', error.message)
     }
   },
 // =====================================================
@@ -63,22 +70,26 @@ export const actions: Action = {
     const slug = slugify(userForm.get('email').split('@')[0])
     try {
       const response = await axios.get(USERSURL+slug)
+      commit('setErrorMessage', "")
       await commit('setUser', response.data)
     } catch (error) {
       console.log(error + " GET USER ERROR")
+      commit('setErrorMessage', error)
     }
   },
 // =====================================================
   async GetAllUsers({commit}) {
     try {
       const response = await axios.get(USERSURL)
+      commit('setErrorMessage', "")
       commit('setAllUsers', response.data)
     } catch (error) {
       console.log(error + " ERROR GETTING ALL USERS")
+      commit('setErrorMessage', error)
     }
   },
 // =====================================================
-  async Login({dispatch}, User) {
+  async Login({dispatch, commit}, User) {
     const userForm = new FormData()
     userForm.append('email', User.email)
     userForm.append('password', User.password)
@@ -87,6 +98,7 @@ export const actions: Action = {
       await dispatch('GetUser', userForm)
     } catch(error) {
       console.log(error + " ERROR LOGGING IN")
+      commit('setErrorMessage', error)
     }
   },
 // =====================================================

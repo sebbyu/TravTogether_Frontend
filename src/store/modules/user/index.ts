@@ -5,6 +5,7 @@ import {getters, mutations, actions} from '@/store/modules/user/methods'
 export const state: State = {
 	user: null,
 	userList: [],
+	errorMessage: "",
 }
 
 

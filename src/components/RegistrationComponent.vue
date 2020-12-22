@@ -6,25 +6,33 @@
     h1 Registration
   .mid-sec
     .form
-      form(@submit="submit")
+      form(@submit.prevent="submit")
         .email
-          input(type='text' name='email' placeholder='Email Address')
+          input(v-model="registrationForm.email"
+                type='text' name='email' placeholder='**Email Address**')
         .nickname
-          input(type='text' name='nickname' placeholder='Nickname')
-          strong (will be set to your email name if left blank)
+          input(v-model="registrationForm.nickname"
+                type='text' name='nickname' 
+          placeholder='Nickname (will be set to your email name if left blank)')
         .profile_picture
           label(for='profile_picture') Profile Picture 
-          input(type='file' name='profile_picture' accept="image/*")
+          input(@change="registrationForm.profilePicture" 
+                type='file' name='profilePicture' accept="image/*")
+
+        //- .profile_picture
+        //-   label(for='profilePicture') Profile Picture 
+        //-   input(v-model="registrationForm.profilePicture" 
+        //-         type='text' name='profilePicture')
         .gender
           label(for='gender') Gender 
-          select(name='gender')
+          select(v-model="registrationForm.gender")
             option(label='' selected disabled) --- 
             option(value="Male") Male
-            option(value="Femail") Female
+            option(value="Female") Female
             option(value="Other") Other
         .age
-          label(for='age') Age  
-          select(name='age')
+          label(for='age') Age 
+          select(v-model="registrationForm.age")
             option(label='' selected disabled) --- 
             option(value='10-') 10-
             option(value="10-20") 10 - 20
@@ -35,51 +43,82 @@
             option(value="60+") 60+
         .ethnicity
           label(for='ethnicity') Ethnicity 
-          select(name='ethnicity')
+          select(v-model="registrationForm.ethnicity")
             option(label='' selected disabled) --- 
-            option(value="Native1") American Indian / Alaska Native
+            option(value="American Indian / Alaska Native") American Indian / Alaska Native
             option(value="Asian") Asian
-            option(value="Black") Black / African American
-            option(value="Latino") Hispanic / Latino
-            option(value="Native2") Native Hawaiian / Other Pacific Islander
+            option(value="Black / African American") Black / African American
+            option(value="Hispanic / Latino") Hispanic / Latino
+            option(value="Native Hawaiian / Other Pacific Islander") Native Hawaiian / Other Pacific Islander
             option(value="White") White
         .location
-          label(for='location') Location
-          select(name='location')
+          label(for='location') **Location** 
+          select(v-model="registrationForm.location") Location
             option(label='' selected disabled) --- 
-            option(value="Native1") American Indian / Alaska Native
-            option(value="Asian") Asian
-            option(value="Black") Black / African American
-            option(value="Latino") Hispanic / Latino
-            option(value="Native2") Native Hawaiian / Other Pacific Islander
-            option(value="White") White
-        .test(v-for="(location, index) in locations" :key="index")
-          .testa
-            | {{ location.city }}, {{ location.country }}
+            option(:value="location.city+', '+location.state+', '+location.country" v-for="(location, index) in locations" :key="index")
+              .with-state(v-if="location.iso3 === 'USA' || location.iso3 === 'CHN' || location.iso3 === 'RUS'")
+                | {{ location.city }}, {{ location.state }}, {{ location.country }}
+              .without-state(v-else)
+                | {{ location.city }}, {{ location.country }}
         .password
-          input(type='password' name='password' placeholder='Password')
+          input(v-model="registrationForm.password"
+          type='password' name='password' placeholder='**Password**')
         .create-button
           button(type='submit') Register
-    
   .btm-sec
-    
     hr
 </template>
 
 
 
 
-<script lang='ts'>
-import {defineComponent,ref} from 'vue'
-import { parse } from "papaparse"
 
+
+
+
+
+
+
+<script lang='ts'>
+import {defineComponent,ref,reactive,computed} from 'vue'
+import { parse } from "papaparse"
+import {useStore} from 'vuex'
+import router from '@/router'
 export default defineComponent({
   name: "RegistrationComponent",
   setup() {
 
+    const store = useStore()
+
+    const errorMessage = computed(() => store.getters['user/getErrorMessage'])
+
+    const errorStatus = computed(() => store.getters['user/getErrorStatus'])
+
+    const registrationForm = reactive({
+      email: "",
+      nickname: "",
+      profilePicture: "",
+      gender: "",
+      age: "",
+      ethnicity: "",
+      location: "",
+      password: "",
+    })
+
+    function clearForm() {
+      registrationForm.email = ""
+      registrationForm.nickname = ""
+      registrationForm.profilePicture = ""
+      registrationForm.gender = ""
+      registrationForm.age = ""
+      registrationForm.ethnicity = ""
+      registrationForm.location = ""
+      registrationForm.password = ""
+    }
+
     const locations = ref()
 
-    parse("http://127.0.0.1:8000/media/locations/worldcities_small.csv", {
+    parse("http://127.0.0.1:8000/media/locations/world-cities.csv", {
       header: true,
       download: true,
       skipEmptyLines: true,
@@ -88,10 +127,39 @@ export default defineComponent({
         locations.value = results.data
       }
     })
-    return {locations,}
+
+    async function submit() {
+      if (registrationForm.email === "" ||
+      registrationForm.location === "" ||
+      registrationForm.password === "") {
+        alert("fill up")
+      } else {
+        try {
+          await store.dispatch('user/RegisterNewUser', registrationForm)
+          if (errorMessage.value !== "") {
+            alert(errorMessage.value)
+          } else {
+            router.push('/login')
+          }
+        } catch (error) {
+          console.log(error + " Registration Error")
+        }
+      }
+    }
+
+
+
+    return {locations,registrationForm,submit,clearForm,errorStatus}
   }
 })
 </script>
+
+
+
+
+
+
+
 
 
 
@@ -107,15 +175,13 @@ export default defineComponent({
   .mid-sec
     .form
       form
-        .nickname
-          margin-left 330px
         .email, .nickname, .password
           input
             margin 5px
             font-size 15px
             text-align left
             background-color white
-            width 300px
+            width 400px
             height 30px
             border none 
             border-radius 10px
