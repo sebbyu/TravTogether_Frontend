@@ -29,7 +29,6 @@
             option(label='' selected disabled) --- 
             option(value="Male") Male
             option(value="Female") Female
-            option(value="Other") Other
         .age
           label(for='age') Age 
           select(v-model="registrationForm.age")
@@ -60,22 +59,17 @@
                 | {{ location.city }}, {{ location.state }}, {{ location.country }}
               .without-state(v-else)
                 | {{ location.city }}, {{ location.country }}
-        .password
-          input(v-model="registrationForm.password"
-          type='password' name='password' placeholder='**Password**')
+        .password1
+          input(v-model="registrationForm.password1"
+          type='password' name='password1' placeholder='**Password**')
+        .password2
+          input(v-model="registrationForm.password2"
+          type='password' name='password2' placeholder='**Re-enter Password**')
         .create-button
           button(type='submit') Register
   .btm-sec
     hr
 </template>
-
-
-
-
-
-
-
-
 
 
 
@@ -102,7 +96,8 @@ export default defineComponent({
       age: "",
       ethnicity: "",
       location: "",
-      password: "",
+      password1: "",
+      password2: "",
     })
 
     function clearForm() {
@@ -113,7 +108,8 @@ export default defineComponent({
       registrationForm.age = ""
       registrationForm.ethnicity = ""
       registrationForm.location = ""
-      registrationForm.password = ""
+      registrationForm.password1 = ""
+      registrationForm.password2 = ""
     }
 
     const locations = ref()
@@ -131,7 +127,8 @@ export default defineComponent({
     async function submit() {
       if (registrationForm.email === "" ||
       registrationForm.location === "" ||
-      registrationForm.password === "") {
+      registrationForm.password1 === "" ||
+      registrationForm.password2 === "") {
         alert("fill up")
       } else {
         try {
@@ -146,21 +143,10 @@ export default defineComponent({
         }
       }
     }
-
-
-
     return {locations,registrationForm,submit,clearForm,errorStatus}
   }
 })
 </script>
-
-
-
-
-
-
-
-
 
 
 
@@ -175,7 +161,7 @@ export default defineComponent({
   .mid-sec
     .form
       form
-        .email, .nickname, .password
+        .email, .nickname, .password1, .password2
           input
             margin 5px
             font-size 15px

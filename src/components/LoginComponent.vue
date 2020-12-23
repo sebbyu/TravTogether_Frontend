@@ -58,18 +58,6 @@ export default defineComponent({
 				console.log("ERROR LOGGING IN")
 			}
 		}
-		// const submit = computed(() => {
-		// 	store.dispatch('user/Login', loginForm)
-		// 	.then(() => {
-		// 		if (isAuthenticated) {
-		// 			// console.log('Logged In')
-		// 			router.push('/')
-		// 		} else {
-		// 			loginError.value = true
-		// 			console.log("ERROR LOGGING IN")
-		// 		}
-		// 	})
-		// })
 		return {loginForm,submit,loginError,}
 	}
 
