@@ -1,17 +1,17 @@
 <template lang='pug'>
 .userdetail(v-if="isAuthenticated")
-  h1 {{ user.nickname }}
+  h1 {{ retrievedUser.nickname }}
   .profile-image
-    .has-profile-image(v-if="user.profilePicture !== ''")
-      img(:src="user.profilePicture" alt="user-profile-picture")
+    .has-profile-image(v-if="retrievedUser.profilePicture !== null")
+      img(:src="retrievedUser.profilePicture" alt="user-profile-picture")
     .no-profile-image(v-else)
       img(src="@/assets/empty-profile.png" alt="user-profile-picture")
   .update-info(v-if="updating")
     form
       label(for="email") email
-        input(v-model="userForm.email" type='text')
+      input(v-model="userForm.email" type='text')
       label(for="nickname") nickname
-        input(v-model="userForm.nickname")
+      input(v-model="userForm.nickname")
       .location
         label(for='location') Location
         select(v-model="userForm.location")
@@ -50,25 +50,30 @@
           option(value="White") White
       .bio
         label(for="bio") Bio
-          textarea(v-model="userForm.bio" cols="70" rows="5")
+        textarea(v-model="userForm.bio" cols="70" rows="5")
       .password
         label(for="password") password
-          input(type='password')
+        input(type='password' v-model="userForm.password")
   .user-info(v-else)
-    h3 email: {{ user.email }}
-    h3 location: {{ user.location }}
-    h3 gender: {{ user.gender }}
-    h3 age: {{ user.age }}
-    h3 ethnicity: {{ user.ethnicity }}
+    h3 email: {{ retrievedUser.email }}
+    h3 location: {{ retrievedUser.location }}
+    h3 gender: {{ retrievedUser.gender }}
+    h3 age: {{ retrievedUser.age }}
+    h3 ethnicity: {{ retrievedUser.ethnicity }}
     .user-bio
       h3 bio:
-      | {{ user.bio }}
-  .buttons
+      | {{ retrievedUser.bio }}
+  .button
     div(v-if="updating")
-      button(@click="update") update
+      button(@click="update") Update
+      button(@click="updating = !updating") Cancel
     div(v-else)
-      button(@click="updating = !updating") Change Info
-    button(@click="updating = !updating") Cancel
+      div(v-if="retrievedUser.nickname == user.nickname")
+        button(@click="updating = !updating") Change Info
+      div(v-else)
+        button Chat
+        button Send Email
+        
 </template>
 
 <script lang='ts'>
@@ -81,7 +86,9 @@ export default defineComponent({
     const store = useStore()
     const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
     const user = computed(() => store.getters['user/getUser'])
+    const retrievedUser = computed(() => store.getters['user/getRetrievedUser'])
     const errorMessage = computed(() => store.getters['user/getErrorMessage'])
+    
     const userForm = {
       email: user.value.email,
       nickname: user.value.nickname,
@@ -91,7 +98,7 @@ export default defineComponent({
       ethnicity: user.value.ethnicity,
       location: user.value.location,
       bio: user.value.bio,
-      password: user.value.password,
+      password: null,
     }
     const updating = ref(false)
     async function update() {
@@ -100,9 +107,9 @@ export default defineComponent({
         if (errorMessage.value !== "") {
           alert("There was some error while updating")
         } else {
+          await store.dispatch('user/RetrieveUser', userForm.slug)
           updating.value = !updating.value
         }
-        
       } catch (error) {
         console.log(error + " Updating User Error")
       }
@@ -120,7 +127,7 @@ export default defineComponent({
       }
     })
 
-    return {user,isAuthenticated,updating,update,userForm,locations}
+    return {user,isAuthenticated,updating,update,userForm,locations,retrievedUser,}
 
   }
 
@@ -130,4 +137,52 @@ export default defineComponent({
 
 <style lang='stylus' scoped>
 
+.userdetail
+  .profile-image
+    img
+      width 300px
+      height 300px
+  .update-info
+    label 
+      margin 5px
+      font-weight bold
+    input
+      margin 5px
+      font-size 15px
+      text-align left
+      background-color white
+      width 400px
+      height 30px
+      border none 
+      border-radius 10px
+    .location, .gender, .age, .ethnicity
+      margin 5px
+      font-size 15px
+      height 40px
+      select
+        background-color white
+        border none 
+        border-radius 10px
+        height 30px
+    .bio
+      display flex
+      justify-content center
+      textarea
+        background-color white
+  // .user-info
+  //   h3
+    // .user-bio
+  .button
+    button
+      margin 15px
+      text-decoration none
+      font-weight bold
+      border-radius 10px
+      cursor pointer
+      padding 5px 10px
+      color rgb(255,255,255)
+      background-color rgb(123,165,221)
+      transition: 0.2s ease
+      &:hover
+        background-color rgb(79,137,212)
 </style>

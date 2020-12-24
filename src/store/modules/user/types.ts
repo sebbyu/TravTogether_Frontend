@@ -3,6 +3,7 @@ import {RootState} from '@/store/types'
 
 export interface State {
 	user: User | null;
+	retrievedUser: User | null;
 	userList: User[];
 	errorMessage: string;
 }
@@ -10,6 +11,7 @@ export interface State {
 export interface User {
 	email: string;
 	nickname: string;
+	slug: string;
 	profilePicture: File;
 	gender: string;
 	age: string;

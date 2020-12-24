@@ -21,7 +21,7 @@
 			| {{ user.nickname }}
 			br
 			.buttons
-				router-link(:to="{name:'User', params: {slug: user.slug }}") Account
+				button(@click="account") Account
 				button(@click="logout") Logout
 		.login_bar(v-else)
 			router-link(to='/login')
@@ -42,7 +42,11 @@ export default defineComponent({
 			await store.dispatch('user/Logout')
 			router.push('/login')
 		}
-		return {isAuthenticated,user,logout}
+		async function account() {
+			await store.dispatch('user/RetrieveUser', user.value.slug)
+			await router.push('/user/'+user.value.slug)
+		}
+		return {isAuthenticated,user,logout,account}
 	}
 })
 </script>
@@ -94,8 +98,7 @@ export default defineComponent({
 			h3
 				margin 0
 			.buttons
-				button, a
-					text-decoration none
+				button
 					margin 2px
 					font-weight bold
 					font-size 12px

@@ -15,6 +15,8 @@ export const getters: Getter = {
 // =====================================================
   getErrorMessage: state => state.errorMessage,
 // =====================================================
+  getRetrievedUser: state => state.retrievedUser,
+// =====================================================
 }
 
 
@@ -38,6 +40,9 @@ export const mutations: Mutation = {
     state.errorMessage = errorMessage
   },
 // =====================================================
+  setRetrievedUser(state, user) {
+    state.retrievedUser = user
+  }
 }
 
 
@@ -87,15 +92,14 @@ export const actions: Action = {
     }
   },
 // =====================================================
-  async GetUser({commit}, userForm) {
-    const slug = slugify(userForm.get('email').split('@')[0])
+  async RetrieveUser({commit}, slug) {
     try {
       const response = await axios.get(USERSURL+slug)
       commit('setErrorMessage', "")
-      await commit('setUser', response.data)
+      commit('setRetrievedUser', response.data)
     } catch (error) {
-      console.log(error + " GET USER ERROR")
       commit('setErrorMessage', error)
+      console.log(error + " ERROR RETRIEVING USER")
     }
   },
 // =====================================================
@@ -119,6 +123,18 @@ export const actions: Action = {
       await dispatch('GetUser', userForm)
     } catch(error) {
       console.log(error + " ERROR LOGGING IN")
+      commit('setErrorMessage', error)
+    }
+  },
+// =====================================================
+  async GetUser({commit}, userForm) {
+    const slug = slugify(userForm.get('email').split('@')[0])
+    try {
+      const response = await axios.get(USERSURL+slug)
+      commit('setErrorMessage', "")
+      await commit('setUser', response.data)
+    } catch (error) {
+      console.log(error + " GET USER ERROR")
       commit('setErrorMessage', error)
     }
   },

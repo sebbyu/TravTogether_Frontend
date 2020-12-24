@@ -22,7 +22,7 @@
 					v-for="(user, index) in userList.filter(user => user.nickname !== currentUser.nickname)" :key="index")
 					.user
 						.profile-picture(style="border:1px solid grey;"
-						@click="UserDetail")
+						@click="userDetail(user)")
 							.has_image(v-if="user.profilePicture")
 								img(:src="user.profilePicture"
 									style="width:180px;height:180px")
@@ -58,6 +58,8 @@
 import {defineComponent, ref, computed, reactive} from 'vue'
 import {useStore} from 'vuex'
 import LoginComponent from '@/components/LoginComponent.vue'
+import router from '@/router'
+import {User} from '@/store/modules/user/types'
 export default defineComponent({
 	name: "FindBuddiesComponent",
 	components: {
@@ -93,7 +95,12 @@ export default defineComponent({
 		store.dispatch("user/GetAllUsers")
 		const userList = computed(() => store.getters['user/getAllUsers'])
 
-		return {search,filters,userList,currentUser,isAuthenticated}
+		async function userDetail(user: User) {
+			await store.dispatch('user/RetrieveUser', user.slug)
+			await router.push('/user/'+user.slug)
+		}
+
+		return {search,filters,userList,currentUser,isAuthenticated,userDetail}
 	}
 })
 </script>
