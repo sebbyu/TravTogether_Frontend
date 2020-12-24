@@ -55,8 +55,8 @@ export const actions: Action = {
     userform.append('age', User.age)
     userform.append('ethnicity', User.ethnicity)
     userform.append('location', User.location)
-    userform.append('password', User.password1)
-    userform.append('password', User.password2)
+    userform.append('password1', User.password1)
+    userform.append('password2', User.password2)
     try {
       await axios.post(USERSURL, userform)
       console.log('Register User')
@@ -64,6 +64,26 @@ export const actions: Action = {
     } catch (error) {
       console.log(error.message + " post error")
       commit('setErrorMessage', error.message)
+    }
+  },
+// =====================================================
+  async UpdateUser({commit}, userForm) {
+    const newForm = new FormData()
+    newForm.append('email', userForm.email)
+    newForm.append('nickname', userForm.nickname)
+    newForm.append('slug', userForm.slug)
+    newForm.append('gender', userForm.gender)
+    newForm.append('age', userForm.age)
+    newForm.append('ethnicity', userForm.ethnicity)
+    newForm.append('location', userForm.location)
+    newForm.append('bio', userForm.bio)
+    newForm.append('password', userForm.password)
+    try {
+      const response = await axios.put(USERSURL+userForm.slug+"/", newForm)
+      commit('setErrorMessage', "")
+      await commit('setUser', response.data)
+    } catch (error) {
+      commit('setErrorMessage', error)
     }
   },
 // =====================================================

@@ -20,7 +20,9 @@
 			h3 Welcome, 
 			| {{ user.nickname }}
 			br
-			button(@click="logout") Logout
+			.buttons
+				router-link(:to="{name:'User', params: {slug: user.slug }}") Account
+				button(@click="logout") Logout
 		.login_bar(v-else)
 			router-link(to='/login')
 				button Login
@@ -34,8 +36,8 @@ export default defineComponent({
 	name: "NavBar",
 	setup() {
 		const store = useStore()
-		const user = computed(() => store.getters['user/getUser'])
 		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
+		const user = computed(() => store.getters['user/getUser'])
 		async function logout() {
 			await store.dispatch('user/Logout')
 			router.push('/login')
@@ -44,23 +46,6 @@ export default defineComponent({
 	}
 })
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <style lang='stylus' scoped>
@@ -108,43 +93,20 @@ export default defineComponent({
 			font-weight bold
 			h3
 				margin 0
-			button
-				margin-top 10px
-				font-weight bold
-				font-size 12px
-				color rgb(255,255,255)
-				padding 5px 10px
-				background-color rgb(123,165,221)
-				border none
-				border-radius 50px
-				cursor pointer
-				transition all 0.5s ease 0s
-				&:hover
-					background-color rgb(73,136,218)
+			.buttons
+				button, a
+					text-decoration none
+					margin 2px
+					font-weight bold
+					font-size 12px
+					color rgb(255,255,255)
+					padding 5px
+					background-color rgb(123,165,221)
+					border none
+					border-radius 50px
+					cursor pointer
+					transition all 0.5s ease 0s
+					&:hover
+						background-color rgb(73,136,218)
 
 </style>
-
-
-.navbar
-	header
-		.logo_bar
-			router-link(to='/')
-				img(src='@/assets/home-logo.png' alt='Home-logo')
-		.nav_bar
-			nav
-				ul.nav_ul
-					router-link(to='/') Home
-					|  | 
-					router-link(to='/about') About
-					|  | 
-					router-link(to='/findbuddies') Find Buddies
-					|  | 
-					router-link(to='/help') Help
-					|  | 
-					router-link(to='/contact') Contact Us
-		.logged_in(v-if="isAuthenticated")
-			h5 Welcome, {{ user.nickname }}
-			button Logout
-		.login_bar(v-else)
-			router-link(to='/login')
-				button Login

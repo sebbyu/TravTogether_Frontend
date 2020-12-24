@@ -18,11 +18,6 @@
           label(for='profile_picture') Profile Picture 
           input(@change="registrationForm.profilePicture" 
                 type='file' name='profilePicture' accept="image/*")
-
-        //- .profile_picture
-        //-   label(for='profilePicture') Profile Picture 
-        //-   input(v-model="registrationForm.profilePicture" 
-        //-         type='text' name='profilePicture')
         .gender
           label(for='gender') Gender 
           select(v-model="registrationForm.gender")

@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import {qanda} from '@/store/modules/qanda'
 import {user} from '@/store/modules/user'
 import {RootState} from '@/store/types'
+import createPersistedState from 'vuex-persistedstate'
 
 export default createStore<RootState>({
   state: {
@@ -14,5 +15,6 @@ export default createStore<RootState>({
   modules: {
     qanda,
     user,
-  }
+  },
+  plugins: [createPersistedState()]
 })

@@ -5,6 +5,7 @@ import Help from '@/views/Help.vue'
 import Contact from '@/views/Contact.vue'
 import Login from '@/views/Login.vue'
 import Registration from '@/views/Registration.vue'
+import User from '@/views/User.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -44,6 +45,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/registration',
     name: 'Registration',
     component: Registration
+  },
+  {
+    path: '/user/:slug',
+    name: 'User',
+    component: User
   },
 ]
 
