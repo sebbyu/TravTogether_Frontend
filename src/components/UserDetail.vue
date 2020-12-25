@@ -98,7 +98,7 @@ export default defineComponent({
       ethnicity: user.value.ethnicity,
       location: user.value.location,
       bio: user.value.bio,
-      password: null,
+      password: user.value.password,
     }
     const updating = ref(false)
     async function update() {

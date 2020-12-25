@@ -9,7 +9,7 @@
       form(@submit.prevent="submit")
         .email
           input(v-model="registrationForm.email"
-                type='text' name='email' placeholder='**Email Address**')
+                type='email' name='email' placeholder='**Email Address**')
         .nickname
           input(v-model="registrationForm.nickname"
                 type='text' name='nickname' 
@@ -69,7 +69,7 @@
 
 
 <script lang='ts'>
-import {defineComponent,ref,reactive,computed} from 'vue'
+import {defineComponent,ref,computed} from 'vue'
 import { parse } from "papaparse"
 import {useStore} from 'vuex'
 import router from '@/router'
@@ -83,7 +83,7 @@ export default defineComponent({
 
     const errorStatus = computed(() => store.getters['user/getErrorStatus'])
 
-    const registrationForm = reactive({
+    const registrationForm = {
       email: "",
       nickname: "",
       profilePicture: "",
@@ -93,7 +93,7 @@ export default defineComponent({
       location: "",
       password1: "",
       password2: "",
-    })
+    }
 
     function clearForm() {
       registrationForm.email = ""

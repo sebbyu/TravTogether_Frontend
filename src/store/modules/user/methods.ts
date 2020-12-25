@@ -60,8 +60,7 @@ export const actions: Action = {
     userform.append('age', User.age)
     userform.append('ethnicity', User.ethnicity)
     userform.append('location', User.location)
-    userform.append('password1', User.password1)
-    userform.append('password2', User.password2)
+    userform.append('password', User.password1)
     try {
       await axios.post(USERSURL, userform)
       console.log('Register User')
