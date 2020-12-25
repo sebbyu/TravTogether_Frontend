@@ -17,10 +17,6 @@
 
 
 
-
-
-
-
 <script lang='ts'>
 import {defineComponent, ref} from 'vue'
 export default defineComponent({
@@ -31,22 +27,16 @@ export default defineComponent({
 		answers: Array,
 	},
 	setup() {
-
 		const answered = ref(false)
+// ============================================================================
 		function answerQuestion(): void {
 			answered.value = !answered.value;
-		} 
+		}
+// ============================================================================
 		return {answered,answerQuestion}
 	}
-
 })
 </script>
-
-
-
-
-
-
 
 
 

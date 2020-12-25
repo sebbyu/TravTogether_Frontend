@@ -16,7 +16,7 @@
           placeholder='Nickname (will be set to your email name if left blank)')
         .profile_picture
           label(for='profile_picture') Profile Picture 
-          input(@change="registrationForm.profilePicture" 
+          input(@change="fileSelected"
                 type='file' name='profilePicture' accept="image/*")
         .gender
           label(for='gender') Gender 
@@ -73,20 +73,20 @@ import {defineComponent,ref,computed} from 'vue'
 import { parse } from "papaparse"
 import {useStore} from 'vuex'
 import router from '@/router'
+import {RegistrationForm, HTMLInputEvent} from '@/store/modules/user/types'
 export default defineComponent({
   name: "RegistrationComponent",
   setup() {
 
     const store = useStore()
-
     const errorMessage = computed(() => store.getters['user/getErrorMessage'])
-
     const errorStatus = computed(() => store.getters['user/getErrorStatus'])
-
-    const registrationForm = {
+    const locations = ref()
+// ============================================================================
+    const registrationForm: RegistrationForm = {
       email: "",
       nickname: "",
-      profilePicture: "",
+      profilePicture: null,
       gender: "",
       age: "",
       ethnicity: "",
@@ -94,21 +94,13 @@ export default defineComponent({
       password1: "",
       password2: "",
     }
-
-    function clearForm() {
-      registrationForm.email = ""
-      registrationForm.nickname = ""
-      registrationForm.profilePicture = ""
-      registrationForm.gender = ""
-      registrationForm.age = ""
-      registrationForm.ethnicity = ""
-      registrationForm.location = ""
-      registrationForm.password1 = ""
-      registrationForm.password2 = ""
+// ============================================================================
+    function fileSelected(e: HTMLInputEvent) {
+      if (e.target.files) {
+        registrationForm.profilePicture = e.target.files[0]
+      }
     }
-
-    const locations = ref()
-
+// ============================================================================
     parse("http://127.0.0.1:8000/media/locations/world-cities.csv", {
       header: true,
       download: true,
@@ -118,7 +110,7 @@ export default defineComponent({
         locations.value = results.data
       }
     })
-
+// ============================================================================
     async function submit() {
       if (registrationForm.email === "" ||
       registrationForm.location === "" ||
@@ -138,7 +130,9 @@ export default defineComponent({
         }
       }
     }
-    return {locations,registrationForm,submit,clearForm,errorStatus}
+// ============================================================================
+    return {locations,registrationForm,submit,errorStatus,
+    fileSelected,errorMessage}
   }
 })
 </script>

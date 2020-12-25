@@ -28,7 +28,6 @@
 
 
 
-
 <script lang='ts'>
 import {defineComponent, computed} from 'vue'
 import QandA from '@/components/QandA.vue'
@@ -43,9 +42,11 @@ export default defineComponent({
 		const store = useStore()
 		store.dispatch('qanda/GetQAs')
 		const qandas = computed(() => store.getters['qanda/getQAs'])
+// ============================================================================
 		const form = {
 			question: "",
 		}
+// ============================================================================
 		const submit = () => {
 			const QuestionForm = new FormData()
 			QuestionForm.append('question', form.question)
@@ -57,18 +58,12 @@ export default defineComponent({
 			} catch (error) {
 				console.log(error + " This is error from dispatch")
 			}
-			
 		}
-
+// ============================================================================
 		return { store,qandas,submit,form, }
 	}
 })
 </script>
-
-
-
-
-
 
 
 

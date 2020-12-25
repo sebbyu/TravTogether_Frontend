@@ -53,7 +53,6 @@
 
 
 
-
 <script lang='ts'>
 import {defineComponent, ref, computed, reactive} from 'vue'
 import {useStore} from 'vuex'
@@ -67,13 +66,17 @@ export default defineComponent({
 	},
 	setup() {
 		const store = useStore()
+		store.dispatch("user/GetAllUsers")
+		const search = ""
 		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
 		const currentUser = computed(() => store.getters['user/getUser'])
-		const search = ""
+		const userList = computed(() => store.getters['user/getAllUsers'])
+// ============================================================================
 		interface Filter {
 			filter: string;
 			filterBool: boolean;
 		}
+// ============================================================================
 		const filters = [
 			reactive({
 				filter: "Country",
@@ -92,14 +95,12 @@ export default defineComponent({
 				filterBool: ref(false),
 			}) as Filter,
 		]
-		store.dispatch("user/GetAllUsers")
-		const userList = computed(() => store.getters['user/getAllUsers'])
-
+// ============================================================================
 		async function userDetail(user: User) {
 			await store.dispatch('user/RetrieveUser', user.slug)
 			await router.push('/user/'+user.slug)
 		}
-
+// ============================================================================
 		return {search,filters,userList,currentUser,isAuthenticated,userDetail}
 	}
 })

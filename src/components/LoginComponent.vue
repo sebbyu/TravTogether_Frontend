@@ -30,6 +30,8 @@
 		.right
 </template>
 
+
+
 <script lang='ts'>
 import {defineComponent, computed, ref} from 'vue'
 import {useStore} from 'vuex'
@@ -39,11 +41,13 @@ export default defineComponent({
 	setup() {
 		const store = useStore()
 		const loginError = ref(false)
+		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
+// ============================================================================
 		const loginForm = {
 			email: "",
 			password: "",
 		}
-		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
+// ============================================================================
 		async function submit() {
 			try {
 				await store.dispatch('user/Login', loginForm)
@@ -58,11 +62,14 @@ export default defineComponent({
 				console.log("ERROR LOGGING IN")
 			}
 		}
+// ============================================================================
 		return {loginForm,submit,loginError,}
 	}
 
 })
 </script>
+
+
 
 <style lang='stylus' scoped>
 .logincomponent

@@ -6,6 +6,7 @@ const USERSURL = "http://127.0.0.1:8000/users/"
 const AUTHENTICATIONURL = "http://127.0.0.1:8000/authentication/"
 
 
+
 export const getters: Getter = {
   isAuthenticated: state => !!state.user,
 // =====================================================
@@ -42,7 +43,7 @@ export const mutations: Mutation = {
 // =====================================================
   setRetrievedUser(state, user) {
     state.retrievedUser = user
-  }
+  },
 }
 
 
@@ -52,17 +53,17 @@ export const mutations: Mutation = {
 
 export const actions: Action = {
 	async RegisterNewUser({commit}, User) {
-    const userform = new FormData()
-    userform.append('email', User.email)
-    userform.append('nickname', User.nickname)
-    userform.append('profilePicture', User.profilePicture)
-    userform.append('gender', User.gender)
-    userform.append('age', User.age)
-    userform.append('ethnicity', User.ethnicity)
-    userform.append('location', User.location)
-    userform.append('password', User.password1)
+    const userForm = new FormData()
+    userForm.append('email', User.email)
+    userForm.append('nickname', User.nickname)
+    userForm.append('profilePicture', User.profilePicture, User.profilePicture.name)
+    userForm.append('gender', User.gender)
+    userForm.append('age', User.age)
+    userForm.append('ethnicity', User.ethnicity)
+    userForm.append('location', User.location)
+    userForm.append('password', User.password1)
     try {
-      await axios.post(USERSURL, userform)
+      await axios.post(USERSURL, userForm)
       console.log('Register User')
       commit('setErrorMessage', "")
     } catch (error) {
@@ -137,6 +138,17 @@ export const actions: Action = {
       commit('setErrorMessage', error)
     }
   },
+// =====================================================
+    async GetUserImage({commit}, imageURL) {
+      try {
+        const response = await axios.get(imageURL)
+        commit('setErrorMessage', "")
+        commit("setImage", response.data)
+      } catch(error) {
+        console.log(error + " ERROR FETCHING IMAGE")
+        commit('setErrorMessage', error)
+      }
+    },
 // =====================================================
   Logout({commit}) {
     commit("logout")

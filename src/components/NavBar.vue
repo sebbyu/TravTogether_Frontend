@@ -38,14 +38,17 @@ export default defineComponent({
 		const store = useStore()
 		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
 		const user = computed(() => store.getters['user/getUser'])
+// ============================================================================
 		async function logout() {
 			await store.dispatch('user/Logout')
 			router.push('/login')
 		}
+// ============================================================================
 		async function account() {
 			await store.dispatch('user/RetrieveUser', user.value.slug)
 			await router.push('/user/'+user.value.slug)
 		}
+// ============================================================================
 		return {isAuthenticated,user,logout,account}
 	}
 })

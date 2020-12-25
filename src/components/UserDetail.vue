@@ -1,11 +1,21 @@
 <template lang='pug'>
 .userdetail(v-if="isAuthenticated")
   h1 {{ retrievedUser.nickname }}
-  .profile-image
+  .profile-image(@click="clickImage")
     .has-profile-image(v-if="retrievedUser.profilePicture !== null")
-      img(:src="retrievedUser.profilePicture" alt="user-profile-picture")
+      img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
+      :class="{userAccount: retrievedUser.nickname == user.nickname}")
     .no-profile-image(v-else)
-      img(src="@/assets/empty-profile.png" alt="user-profile-picture")
+      img(src="@/assets/empty-profile.png" alt="user-profile-picture"
+      :class="{userAccount: retrievedUser.nickname == user.nickname}")
+    div(v-if="retrievedUser.nickname == user.nickname")
+      input(
+          type='file'
+          style="display:none"
+          ref="fileInput"
+          accept="image/*"
+          @change="changeImage"
+        )
   .update-info(v-if="updating")
     form
       label(for="email") email
@@ -65,7 +75,7 @@
       | {{ retrievedUser.bio }}
   .button
     div(v-if="updating")
-      button(@click="update") Update
+      button(@click="updateProfile") Update
       button(@click="updating = !updating") Cancel
     div(v-else)
       div(v-if="retrievedUser.nickname == user.nickname")
@@ -73,8 +83,9 @@
       div(v-else)
         button Chat
         button Send Email
-        
 </template>
+
+
 
 <script lang='ts'>
 import {defineComponent, computed, ref} from 'vue'
@@ -88,7 +99,10 @@ export default defineComponent({
     const user = computed(() => store.getters['user/getUser'])
     const retrievedUser = computed(() => store.getters['user/getRetrievedUser'])
     const errorMessage = computed(() => store.getters['user/getErrorMessage'])
-    
+    const updating = ref(false)
+    const locations = ref()
+    const fileInput = ref()
+// ============================================================================
     const userForm = {
       email: user.value.email,
       nickname: user.value.nickname,
@@ -100,8 +114,18 @@ export default defineComponent({
       bio: user.value.bio,
       password: user.value.password,
     }
-    const updating = ref(false)
-    async function update() {
+// ============================================================================
+    function clickImage() {
+      if (retrievedUser.value.nickname === user.value.nickname) {
+        fileInput.value.click()
+      }
+    }
+// ============================================================================
+    function changeImage() {
+      alert("Change Image")
+    }
+// ============================================================================
+    async function updateProfile() {
       try {
         await store.dispatch("user/UpdateUser", userForm)
         if (errorMessage.value !== "") {
@@ -114,9 +138,7 @@ export default defineComponent({
         console.log(error + " Updating User Error")
       }
     }
-
-    const locations = ref()
-
+// ============================================================================
     parse("http://127.0.0.1:8000/media/locations/world-cities.csv", {
       header: true,
       download: true,
@@ -126,22 +148,26 @@ export default defineComponent({
         locations.value = results.data
       }
     })
-
-    return {user,isAuthenticated,updating,update,userForm,locations,retrievedUser,}
-
+// ============================================================================
+    return {user,isAuthenticated,updating,updateProfile,userForm,
+    locations,retrievedUser,fileInput,changeImage,clickImage,}
   }
-
-
 })
 </script>
 
-<style lang='stylus' scoped>
 
+
+<style lang='stylus' scoped>
 .userdetail
   .profile-image
     img
       width 300px
       height 300px
+    .userAccount
+      cursor pointer
+      transition 0.3s ease
+      &:hover
+        transform scale(1.1)
   .update-info
     label 
       margin 5px

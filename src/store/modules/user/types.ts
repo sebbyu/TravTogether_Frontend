@@ -18,9 +18,23 @@ export interface User {
 	ethnicity: string;
 	location: string;
 	password: string;
-	
 }
 
+export interface RegistrationForm {
+	email: string;
+	nickname: string;
+	profilePicture: File | null;
+	gender: string;
+	age: string;
+	ethnicity: string;
+	location: string;
+	password1: string;
+	password2: string;
+}
+
+export interface HTMLInputEvent extends Event {
+	target: HTMLInputElement & EventTarget;
+}
 
 export type Getter = GetterTree<State, RootState>
 export type Mutation = MutationTree<State>
