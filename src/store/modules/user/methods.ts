@@ -142,10 +142,27 @@ export const actions: Action = {
     async GetUserImage({commit}, imageURL) {
       try {
         const response = await axios.get(imageURL)
-        commit('setErrorMessage', "")
+        
         commit("setImage", response.data)
       } catch(error) {
         console.log(error + " ERROR FETCHING IMAGE")
+        
+      }
+    },
+// =====================================================
+    async ChangeUserImage({commit}, imageForm) {
+      const newImage = new FormData()
+      newImage.append('email', imageForm.email)
+      newImage.append('slug', imageForm.slug)
+      newImage.append('profilePicture', imageForm.profilePicture, imageForm.profilePicture.name)
+      newImage.append('password', imageForm.password)
+      try {
+        await axios.put(USERSURL+imageForm.slug+'/', newImage)
+        commit('setErrorMessage', "")
+        const response = await axios.get(USERSURL+imageForm.slug+'/')
+        commit('setUser', response.data)
+      } catch (error) {
+        console.log(error + " ERROR CHANGING IMAGE")
         commit('setErrorMessage', error)
       }
     },

@@ -1,13 +1,16 @@
 <template lang='pug'>
 .userdetail(v-if="isAuthenticated")
   h1 {{ retrievedUser.nickname }}
-  .profile-image(@click="clickImage")
+  .profile-image
     .has-profile-image(v-if="retrievedUser.profilePicture !== null")
       img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
       :class="{userAccount: retrievedUser.nickname == user.nickname}")
     .no-profile-image(v-else)
       img(src="@/assets/empty-profile.png" alt="user-profile-picture"
       :class="{userAccount: retrievedUser.nickname == user.nickname}")
+  .update-info(v-if="updating")
+    .buttons
+      button(@click="clickImage") Change Image
     div(v-if="retrievedUser.nickname == user.nickname")
       input(
           type='file'
@@ -16,12 +19,13 @@
           accept="image/*"
           @change="changeImage"
         )
-  .update-info(v-if="updating")
     form
-      label(for="email") email
-      input(v-model="userForm.email" type='text')
-      label(for="nickname") nickname
-      input(v-model="userForm.nickname")
+      .email
+        label(for="email") email
+        input(v-model="userForm.email" type='text')
+      .nickname
+        label(for="nickname") nickname
+        input(v-model="userForm.nickname")
       .location
         label(for='location') Location
         select(v-model="userForm.location")
@@ -77,12 +81,14 @@
     div(v-if="updating")
       button(@click="updateProfile") Update
       button(@click="updating = !updating") Cancel
+      button(style='background-color:red;') Delete Account
     div(v-else)
       div(v-if="retrievedUser.nickname == user.nickname")
         button(@click="updating = !updating") Change Info
       div(v-else)
         button Chat
         button Send Email
+        button(@click="goBack") Go Back
 </template>
 
 
@@ -91,12 +97,14 @@
 import {defineComponent, computed, ref} from 'vue'
 import {useStore} from 'vuex'
 import { parse } from "papaparse"
+import router from '@/router'
+import {HTMLInputEvent, ImageForm} from '@/store/modules/user/types'
 export default defineComponent({
   name: "UserDetail",
   setup() {
     const store = useStore()
     const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
-    const user = computed(() => store.getters['user/getUser'])
+    const user = store.getters['user/getUser']
     const retrievedUser = computed(() => store.getters['user/getRetrievedUser'])
     const errorMessage = computed(() => store.getters['user/getErrorMessage'])
     const updating = ref(false)
@@ -104,25 +112,43 @@ export default defineComponent({
     const fileInput = ref()
 // ============================================================================
     const userForm = {
-      email: user.value.email,
-      nickname: user.value.nickname,
-      slug: user.value.slug,
-      gender:user.value.gender,
-      age: user.value.age,
-      ethnicity: user.value.ethnicity,
-      location: user.value.location,
-      bio: user.value.bio,
-      password: user.value.password,
+      email: user.email,
+      nickname: user.nickname,
+      slug: user.slug,
+      gender:user.gender,
+      age: user.age,
+      ethnicity: user.ethnicity,
+      location: user.location,
+      bio: user.bio,
+      password: user.password,
     }
 // ============================================================================
+    const imageForm = {
+      email: "",
+      slug: "",
+      profilePicture: null,
+      password: "",
+    } as ImageForm
+// ============================================================================
     function clickImage() {
-      if (retrievedUser.value.nickname === user.value.nickname) {
+      if (retrievedUser.value.nickname === user.nickname) {
         fileInput.value.click()
       }
     }
 // ============================================================================
-    function changeImage() {
-      alert("Change Image")
+    async function changeImage(e: HTMLInputEvent) {
+      if (e.target.files) {
+        imageForm.profilePicture = e.target.files[0]
+        imageForm.slug = user.slug
+        imageForm.email = user.email
+        imageForm.password = user.password
+      }
+      try {
+        await store.dispatch('user/ChangeUserImage', imageForm)
+        await store.dispatch('user/RetrieveUser', imageForm.slug)
+      } catch (error) {
+        console.log(error + " ERROR CHANGING PROFILEPICTURE")
+      }
     }
 // ============================================================================
     async function updateProfile() {
@@ -149,8 +175,12 @@ export default defineComponent({
       }
     })
 // ============================================================================
+    function goBack() {
+      router.go(-1)
+    }
+// ============================================================================
     return {user,isAuthenticated,updating,updateProfile,userForm,
-    locations,retrievedUser,fileInput,changeImage,clickImage,}
+    locations,retrievedUser,fileInput,changeImage,clickImage,goBack,}
   }
 })
 </script>
@@ -169,6 +199,18 @@ export default defineComponent({
       &:hover
         transform scale(1.1)
   .update-info
+    button
+      margin 15px
+      text-decoration none
+      font-weight bold
+      border-radius 10px
+      cursor pointer
+      padding 5px 10px
+      color rgb(255,255,255)
+      background-color rgb(123,165,221)
+      transition: 0.2s ease
+      &:hover
+        background-color rgb(79,137,212)
     label 
       margin 5px
       font-weight bold

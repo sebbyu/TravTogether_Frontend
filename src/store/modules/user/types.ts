@@ -32,6 +32,13 @@ export interface RegistrationForm {
 	password2: string;
 }
 
+export interface ImageForm {
+	email: string;
+	slug: string;
+	profilePicture: File | null;
+	password: string;
+}
+
 export interface HTMLInputEvent extends Event {
 	target: HTMLInputElement & EventTarget;
 }
