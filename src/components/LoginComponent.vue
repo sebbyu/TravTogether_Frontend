@@ -23,6 +23,10 @@
 							| Please Try Again.
 						.login-button
 							button(type='submit') Login
+						.social-media-signin
+							p Sign in with
+							img(src="@/assets/gmail-logo.png")
+							img(src="@/assets/facebook-logo.png")
 			.btm-sec
 				hr
 				p OR
@@ -111,10 +115,15 @@ export default defineComponent({
 					color red
 				.login-button
 					margin 15px
+				.social-media-signin
+					img
+						width 40px
+						height 40px
+						margin 5px
 			
 		.btm-sec
 			p
-				margin 10px 0
+				margin 20px 0
 				color rgb(146, 146, 146)
 				font-size 15px
 </style>
