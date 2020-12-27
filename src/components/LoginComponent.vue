@@ -120,6 +120,10 @@ export default defineComponent({
 						width 40px
 						height 40px
 						margin 5px
+						cursor pointer
+						transition 0.3s ease
+						&:hover
+							transform scale(1.2)
 		.btm-sec
 			p
 				margin 20px 0

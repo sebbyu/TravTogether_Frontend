@@ -18,14 +18,25 @@
         .type_msg
           .input_msg_write
             input.write_msg(type='text' placeholder='Type a message')
-            button.msg_send_btn(type='button')
+            button.msg_send_btn Enter
+  .buttons
+    button invite
+    button(@click="goBack") Exit
 </template>
 
 
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
+import router from '@/router'
 export default defineComponent({
+  name: "Chatroom",
+  setup() {
+    function goBack() {
+      router.go(-1)
+    }
+    return {goBack,}
+  }
 
 })
 </script>
@@ -101,14 +112,19 @@ export default defineComponent({
               width 100%
             .msg_send_btn
               background #05728f none repeat scroll 0 0
-              border medium none 
-              border-radius 50%
+              border none 
               color #fff
               cursor pointer
               font-size 17px
-              height 33px
               position absolute
               right 0
               top 11px
-              width 33px
+  .buttons
+    button
+      background #05728f none repeat scroll 0 0
+      border none 
+      color #fff
+      cursor pointer
+      font-size 17px
+      margin 10px
 </style>

@@ -87,7 +87,7 @@
         button(@click="updating = !updating") Change Info
       div(v-else)
         router-link(to="/chat") Chat
-        router-link(to="/email") Send Message
+        router-link(to="/message") Send Message
         button(@click="goBack") Go Back
 </template>
 
