@@ -123,7 +123,6 @@ export default defineComponent({
 						color white
 						transition 0.2s
 						background-color rgb(123,165,221)
-						padding 3px
 						outline none
 					button
 						outline none
