@@ -6,10 +6,9 @@
     label(for="btnControl")
       .has-profile-image(v-if="retrievedUser.profilePicture !== null")
         img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
-        :class="{userAccount: retrievedUser.nickname == user.nickname}")
+        @click="blurBackground")
       .no-profile-image(v-else)
-        img(src="@/assets/empty-profile.png" alt="user-profile-picture"
-        :class="{userAccount: retrievedUser.nickname == user.nickname}")
+        img(src="@/assets/empty-profile.png" alt="user-profile-picture")
     h {{ retrievedUser.nickname }}
   .user-info(v-if="!updating")
     .title
@@ -192,7 +191,8 @@ export default defineComponent({
     }
 // ============================================================================
     return {user,isAuthenticated,updating,updateProfile,userForm,
-    locations,retrievedUser,fileInput,changeImage,clickImage,goBack,}
+    locations,retrievedUser,fileInput,changeImage,clickImage,goBack,
+    }
   }
 })
 </script>
@@ -217,7 +217,6 @@ export default defineComponent({
       width 100px
       height 100px
       border-radius 50px
-    .userAccount
       cursor pointer
       transition 0.3s ease
       &:hover
