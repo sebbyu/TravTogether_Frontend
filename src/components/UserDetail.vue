@@ -1,14 +1,35 @@
 <template lang='pug'>
 .userdetail(v-if="isAuthenticated")
-  h1 {{ retrievedUser.nickname }}
+  h1 Account
   .profile-image
-    .has-profile-image(v-if="retrievedUser.profilePicture !== null")
-      img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
-      :class="{userAccount: retrievedUser.nickname == user.nickname}")
-    .no-profile-image(v-else)
-      img(src="@/assets/empty-profile.png" alt="user-profile-picture"
-      :class="{userAccount: retrievedUser.nickname == user.nickname}")
-  .update-info(v-if="updating")
+    input(type="checkbox" id="btnControl")
+    label(for="btnControl")
+      .has-profile-image(v-if="retrievedUser.profilePicture !== null")
+        img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
+        :class="{userAccount: retrievedUser.nickname == user.nickname}")
+      .no-profile-image(v-else)
+        img(src="@/assets/empty-profile.png" alt="user-profile-picture"
+        :class="{userAccount: retrievedUser.nickname == user.nickname}")
+    h {{ retrievedUser.nickname }}
+  .user-info(v-if="!updating")
+    .title
+      img(src="@/assets/account-logo.png")
+      h3 Account
+    .info
+      h2 email: 
+      h3 --- {{ retrievedUser.email }} ---
+      h2 location: 
+      h3 --- {{ retrievedUser.location }} ---
+      h2 gender: 
+      h3 --- {{ retrievedUser.gender }} ---
+      h2 age: 
+      h3 --- {{ retrievedUser.age }} ---
+      h2 ethnicity: 
+      h3 --- {{ retrievedUser.ethnicity }} ---
+    .user-bio
+      h2 bio:
+      p.text {{ retrievedUser.bio }}
+  .update-info(v-else)
     .buttons
       button(@click="clickImage") Change Image
     div(v-if="retrievedUser.nickname == user.nickname")
@@ -68,15 +89,6 @@
       .password
         label(for="password") password
         input(type='password' v-model="userForm.password")
-  .user-info(v-else)
-    h3 email: {{ retrievedUser.email }}
-    h3 location: {{ retrievedUser.location }}
-    h3 gender: {{ retrievedUser.gender }}
-    h3 age: {{ retrievedUser.age }}
-    h3 ethnicity: {{ retrievedUser.ethnicity }}
-    .user-bio
-      h3 bio:
-      | {{ retrievedUser.bio }}
   .button
     div(v-if="updating")
       button(@click="updateProfile") Update
@@ -190,14 +202,56 @@ export default defineComponent({
 <style lang='stylus' scoped>
 .userdetail
   .profile-image
+    #btnControl
+      display none
+      &:checked+label
+        img
+          width 600px
+          height 600px
+          border-radius 0
+          position absolute
+          margin auto
+          left 0
+          right 0
     img
-      width 300px
-      height 300px
+      width 100px
+      height 100px
+      border-radius 50px
     .userAccount
       cursor pointer
       transition 0.3s ease
       &:hover
         transform scale(1.1)
+  .user-info
+    .title
+      display flex
+      justify-content center
+      margin-right 20px
+      margin-top 40px
+      align-items center
+      font-weight bold
+      img
+        height 25px
+        width 25px
+        margin 0 10px
+    .info
+      h2
+        display flex
+        justify-content center
+        text-decoration underline
+      h3
+        display flex
+        justify-content center
+        margin-bottom 50px
+    .user-bio
+      .text
+        padding 20px
+        border none
+        box-shadow 1px 1px 10px 10px #DCD9D8
+        max-width 800px
+        margin-left auto
+        margin-right auto
+        height 250px
   .update-info
     button
       margin 15px
