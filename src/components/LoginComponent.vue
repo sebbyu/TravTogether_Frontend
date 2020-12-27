@@ -120,7 +120,6 @@ export default defineComponent({
 						width 40px
 						height 40px
 						margin 5px
-			
 		.btm-sec
 			p
 				margin 20px 0

@@ -6,6 +6,8 @@ import Contact from '@/views/Contact.vue'
 import Login from '@/views/Login.vue'
 import Registration from '@/views/Registration.vue'
 import User from '@/views/User.vue'
+import Chat from '@/views/Chat.vue'
+import Message from '@/views/Message.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -50,6 +52,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/user/:slug',
     name: 'User',
     component: User
+  },
+  {
+    path: '/chat/',
+    name: 'Chat',
+    component: Chat
+  },
+  {
+    path: '/message/',
+    name: 'Message',
+    component: Message
   },
 ]
 

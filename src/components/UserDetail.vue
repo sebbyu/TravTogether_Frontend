@@ -86,8 +86,8 @@
       div(v-if="retrievedUser.nickname == user.nickname")
         button(@click="updating = !updating") Change Info
       div(v-else)
-        button Chat
-        button Send Email
+        router-link(to="/chat") Chat
+        router-link(to="/email") Send Message
         button(@click="goBack") Go Back
 </template>
 
@@ -241,8 +241,9 @@ export default defineComponent({
   //   h3
     // .user-bio
   .button
-    button
+    button, a
       margin 15px
+      border none
       text-decoration none
       font-weight bold
       border-radius 10px

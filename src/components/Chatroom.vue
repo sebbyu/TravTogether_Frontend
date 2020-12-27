@@ -1,0 +1,98 @@
+<template lang='pug'>
+.container
+  h3.text-center Messaging
+  .messaging
+    .inbox_msg
+      .inbox_people
+        .headind_srch
+          .recent_heading
+            h4 Recent
+          .srch_bar
+            .stylish-input-group
+              input.search-bar(type='text' placeholder='Search')
+        .inbox_chat
+      .mesgs
+        .msg_history
+        .type_msg
+          .input_msg_write
+            input.write_msg(type='text' placeholder='Type a message')
+            button.msg_send_btn(type='button')
+</template>
+
+<script lang='ts'>
+import {defineComponent} from 'vue'
+export default defineComponent({
+
+})
+</script>
+
+<style lang="stylus" scoped>
+.container
+  max-width 1170px
+  .messaging
+    .inbox_msg
+      border 1px solid #c4c4c4
+      clear both
+      overflow hidden
+      .inbox_people
+        background #f8f8f8 none repeat scroll 0 0
+        overflow hidden
+        float left
+        width 36%
+        border-right 1px solid #c4c4c4
+        .headind_srch
+          padding 10px 29px 10px 20px
+          overflow hidden
+          border-bottom 1px solid #c4c4c4
+          .recent_heading
+            float left 
+            width 20%
+            h4
+              color #05728f
+              font-size 21px
+              margin auto
+          .srch_bar
+            display inline-block
+            text-align right
+            width 80%
+            .stylish-input-group
+              .search-bar
+                border 1px solid #cdcdcd
+                border-width 0 0 1px 0
+                width 80%
+                padding 2px 0 4px 6px
+                background none
+        .inbox_chat
+          height 550px
+          overflow-y scroll
+      .mesgs
+        float right
+        padding 30px 15px 0 25px
+        width 60%
+        .msg_history
+          height 516px
+          overflow-y auto
+        .type_msg
+          border-top 1px solid #c4c4c4
+          position relative
+          .input_msg_write
+            .write_msg
+              background rgba(0,0,0,0) none repeat scroll 0 0
+              border medium none
+              color #4c4c4c
+              font-size 15px
+              min-height 48px
+              width 100%
+            .msg_send_btn
+              background #05728f none repeat scroll 0 0
+              border medium none 
+              border-radius 50%
+              color #fff
+              cursor pointer
+              font-size 17px
+              height 33px
+              position absolute
+              right 0
+              top 11px
+              width 33px
+</style>
