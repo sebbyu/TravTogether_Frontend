@@ -20,8 +20,8 @@
             input.write_msg(type='text' placeholder='Type a message')
             button.msg_send_btn Enter
   .buttons
-    button invite
-    button(@click="goBack") Exit
+    button.button invite
+    button.button(@click="goBack") Exit
 </template>
 
 
@@ -35,6 +35,7 @@ export default defineComponent({
     function goBack() {
       router.go(-1)
     }
+// ============================================================================
     return {goBack,}
   }
 
@@ -60,7 +61,6 @@ export default defineComponent({
       border 3px solid #f8f8ff
       clear both
       overflow hidden
-      
       .inbox_people
         background #f8f8f8 none repeat scroll 0 0
         overflow hidden
@@ -92,17 +92,21 @@ export default defineComponent({
         .inbox_chat
           height 550px
           overflow-y scroll
+          background-color #f5f5f5
       .mesgs
         float right
         padding 30px 15px 0 25px
         width 60%
         .msg_history
+          background-color #f5f5f5
           height 516px
           overflow-y auto
         .type_msg
           border-top 1px solid #c4c4c4
           position relative
           .input_msg_write
+            background-color white
+            display flex
             .write_msg
               background rgba(0,0,0,0) none repeat scroll 0 0
               border medium none
@@ -110,21 +114,33 @@ export default defineComponent({
               font-size 15px
               min-height 48px
               width 100%
+              &:focus
+                outline none
             .msg_send_btn
               background #05728f none repeat scroll 0 0
               border none 
               color #fff
               cursor pointer
               font-size 17px
-              position absolute
-              right 0
-              top 11px
+              font-weight bold
   .buttons
-    button
-      background #05728f none repeat scroll 0 0
-      border none 
-      color #fff
+    .button
+      // background #05728f none repeat scroll 0 0
+      // border none 
+      // color #fff
+      // cursor pointer
+      // font-size 17px
+      // margin 15px
       cursor pointer
       font-size 17px
-      margin 10px
+      margin 20px
+      border-radius 10px
+      border none
+      box-shadow -3px 3px 10px 5px #f8f8ff
+      padding 5px 10px
+      font-weight bold
+      color #708090
+      transition 0.3s ease
+      &:hover
+        box-shadow -3px 3px 10px 15px #dcdcdc
 </style>

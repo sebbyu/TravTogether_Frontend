@@ -56,7 +56,9 @@ export const actions: Action = {
     const userForm = new FormData()
     userForm.append('email', User.email)
     userForm.append('nickname', User.nickname)
-    userForm.append('profilePicture', User.profilePicture, User.profilePicture.name)
+    if (User.profilePicture) {
+      userForm.append('profilePicture', User.profilePicture, User.profilePicture.name)
+    }
     userForm.append('gender', User.gender)
     userForm.append('age', User.age)
     userForm.append('ethnicity', User.ethnicity)
@@ -72,7 +74,7 @@ export const actions: Action = {
     }
   },
 // =====================================================
-  async UpdateUser({commit}, userForm) {
+  async UpdateUser({commit, state}, userForm) {
     const newForm = new FormData()
     newForm.append('email', userForm.email)
     newForm.append('nickname', userForm.nickname)
@@ -82,7 +84,13 @@ export const actions: Action = {
     newForm.append('ethnicity', userForm.ethnicity)
     newForm.append('location', userForm.location)
     newForm.append('bio', userForm.bio)
-    newForm.append('password', userForm.password)
+    let password = userForm.password
+    if (userForm.password == null) {
+      if (state.user) {
+        password = state.user.password
+      }
+    }
+    newForm.append('password', password)
     try {
       const response = await axios.put(USERSURL+userForm.slug+"/", newForm)
       commit('setErrorMessage', "")

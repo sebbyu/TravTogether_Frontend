@@ -120,7 +120,7 @@ export default defineComponent({
       ethnicity: user.ethnicity,
       location: user.location,
       bio: user.bio,
-      password: user.password,
+      password: null,
     }
 // ============================================================================
     const imageForm = {
