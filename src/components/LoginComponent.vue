@@ -24,7 +24,7 @@
 						.login-button
 							button(type='submit') Login
 						.social-media-signin
-							p Sign in with
+							p Sign in with:
 							img(src="@/assets/gmail-logo.png")
 							img(src="@/assets/facebook-logo.png")
 			.btm-sec
@@ -79,6 +79,7 @@ export default defineComponent({
 .logincomponent
 	button, a
 		text-decoration none
+		border none
 		font-weight bold
 		border-radius 10px
 		cursor pointer
@@ -88,7 +89,6 @@ export default defineComponent({
 		transition: 0.2s ease
 		&:hover
 			background-color rgb(79,137,212)
-	margin 50px 0
 	.row
 		.top-sec
 			.logo
@@ -116,6 +116,13 @@ export default defineComponent({
 				.login-button
 					margin 15px
 				.social-media-signin
+					display flex 
+					justify-content center
+					align-items center
+					p
+						font-weight bold
+						font-size 20px
+						padding-right 10px
 					img
 						width 40px
 						height 40px

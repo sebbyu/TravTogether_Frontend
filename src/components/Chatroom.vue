@@ -125,12 +125,6 @@ export default defineComponent({
               font-weight bold
   .buttons
     .button
-      // background #05728f none repeat scroll 0 0
-      // border none 
-      // color #fff
-      // cursor pointer
-      // font-size 17px
-      // margin 15px
       cursor pointer
       font-size 17px
       margin 20px
