@@ -1,6 +1,8 @@
 <template lang='pug'>
 .container
-  h3.text-center Messaging
+  .header
+    h3.text-center Chatroom
+    img(src="@/assets/chat-logo.png")
   .messaging
     .inbox_msg
       .inbox_people
@@ -19,6 +21,8 @@
             button.msg_send_btn(type='button')
 </template>
 
+
+
 <script lang='ts'>
 import {defineComponent} from 'vue'
 export default defineComponent({
@@ -26,14 +30,26 @@ export default defineComponent({
 })
 </script>
 
+
+
 <style lang="stylus" scoped>
 .container
   max-width 1170px
+  margin auto
+  .header
+    display flex
+    justify-content center
+    img
+      height 40px
+      width 40px
+      margin-left 20px
   .messaging
+    box-shadow 2px 2px 15px 5px #f0f8ff
     .inbox_msg
-      border 1px solid #c4c4c4
+      border 3px solid #f8f8ff
       clear both
       overflow hidden
+      
       .inbox_people
         background #f8f8f8 none repeat scroll 0 0
         overflow hidden
