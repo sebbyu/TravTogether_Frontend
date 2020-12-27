@@ -1,69 +1,69 @@
 <template lang='pug'>
 .registrationcomponent
-  .top-sec
-    .logo
-      img(src='@/assets/registration.png' alt='registration')
-    h1 Registration
-  .mid-sec
-    .form
-      form(@submit.prevent="submit")
-        .email
-          input(v-model="registrationForm.email"
-                type='email' name='email' placeholder='**Email Address**')
-        .nickname
-          input(v-model="registrationForm.nickname"
-                type='text' name='nickname' 
-          placeholder='Nickname (will be set to your email name if left blank)')
-        .profile_picture
-          label(for='profile_picture') Profile Picture 
-          input(@change="fileSelected"
-                type='file' name='profilePicture' accept="image/*")
-        .gender
-          label(for='gender') Gender 
-          select(v-model="registrationForm.gender")
-            option(label='' selected disabled) --- 
-            option(value="Male") Male
-            option(value="Female") Female
-        .age
-          label(for='age') Age 
-          select(v-model="registrationForm.age")
-            option(label='' selected disabled) --- 
-            option(value='10-') 10-
-            option(value="10-20") 10 - 20
-            option(value="20-30") 20 - 30
-            option(value="30-40") 30 - 40
-            option(value="40-50") 40 - 50
-            option(value="50-60") 50 - 60
-            option(value="60+") 60+
-        .ethnicity
-          label(for='ethnicity') Ethnicity 
-          select(v-model="registrationForm.ethnicity")
-            option(label='' selected disabled) --- 
-            option(value="American Indian / Alaska Native") American Indian / Alaska Native
-            option(value="Asian") Asian
-            option(value="Black / African American") Black / African American
-            option(value="Hispanic / Latino") Hispanic / Latino
-            option(value="Native Hawaiian / Other Pacific Islander") Native Hawaiian / Other Pacific Islander
-            option(value="White") White
-        .location
-          label(for='location') **Location** 
-          select(v-model="registrationForm.location") Location
-            option(label='' selected disabled) --- 
-            option(:value="location.city+', '+location.state+', '+location.country" v-for="(location, index) in locations" :key="index")
-              .with-state(v-if="location.iso3 === 'USA' || location.iso3 === 'CHN' || location.iso3 === 'RUS'")
-                | {{ location.city }}, {{ location.state }}, {{ location.country }}
-              .without-state(v-else)
-                | {{ location.city }}, {{ location.country }}
-        .password1
-          input(v-model="registrationForm.password1"
-          type='password' name='password1' placeholder='**Password**')
-        .password2
-          input(v-model="registrationForm.password2"
-          type='password' name='password2' placeholder='**Re-enter Password**')
-        .create-button
-          button(type='submit') Register
+  .container
+    .top-sec
+      img.logo(src='@/assets/registration.png' alt='registration')
+      h1 Registration
+    .mid-sec
+      .form
+        form(@submit.prevent="submit")
+          .email
+            input(v-model="registrationForm.email"
+                  type='email' name='email' placeholder='**Email Address**')
+          .nickname
+            input(v-model="registrationForm.nickname"
+                  type='text' name='nickname' 
+            placeholder='Nickname (will be set to your email name if left blank)')
+          .profile_picture
+            label(for='profile_picture') Profile Picture 
+            input(@change="fileSelected"
+                  type='file' name='profilePicture' accept="image/*")
+          .gender
+            label(for='gender') Gender 
+            select(v-model="registrationForm.gender")
+              option(label='' selected disabled) --- 
+              option(value="Male") Male
+              option(value="Female") Female
+          .age
+            label(for='age') Age 
+            select(v-model="registrationForm.age")
+              option(label='' selected disabled) --- 
+              option(value='10-') 10-
+              option(value="10-20") 10 - 20
+              option(value="20-30") 20 - 30
+              option(value="30-40") 30 - 40
+              option(value="40-50") 40 - 50
+              option(value="50-60") 50 - 60
+              option(value="60+") 60+
+          .ethnicity
+            label(for='ethnicity') Ethnicity 
+            select(v-model="registrationForm.ethnicity")
+              option(label='' selected disabled) --- 
+              option(value="American Indian / Alaska Native") American Indian / Alaska Native
+              option(value="Asian") Asian
+              option(value="Black / African American") Black / African American
+              option(value="Hispanic / Latino") Hispanic / Latino
+              option(value="Native Hawaiian / Other Pacific Islander") Native Hawaiian / Other Pacific Islander
+              option(value="White") White
+          .location
+            label(for='location') **Location** 
+            select(v-model="registrationForm.location") Location
+              option(label='' selected disabled) --- 
+              option(:value="location.city+', '+location.state+', '+location.country" v-for="(location, index) in locations" :key="index")
+                .with-state(v-if="location.iso3 === 'USA' || location.iso3 === 'CHN' || location.iso3 === 'RUS'")
+                  | {{ location.city }}, {{ location.state }}, {{ location.country }}
+                .without-state(v-else)
+                  | {{ location.city }}, {{ location.country }}
+          .password1
+            input(v-model="registrationForm.password1"
+            type='password' name='password1' placeholder='**Password**')
+          .password2
+            input(v-model="registrationForm.password2"
+            type='password' name='password2' placeholder='**Re-enter Password**')
+          .create-button
+            button(type='submit') Register
   .btm-sec
-    hr
+    //- hr
 </template>
 
 
@@ -141,46 +141,49 @@ export default defineComponent({
 
 <style lang='stylus' scoped>
 .registrationcomponent
-  margin 50px 0
-  .top-sec
-    .logo
-      img
+  .container
+    box-shadow 1px 1px 10px 2px #DCD9D8
+    padding 30px
+    max-width 700px
+    margin auto
+    .top-sec
+      .logo
         height 100px
         width auto
-  .mid-sec
-    .form
-      form
-        .email, .nickname, .password1, .password2
-          input
+    .mid-sec
+      .form
+        form
+          .email, .nickname, .password1, .password2
+            input
+              margin 5px
+              font-size 15px
+              text-align left
+              background-color white
+              width 400px
+              height 30px
+              border none 
+              border-radius 10px
+          .profile_picture, .gender, .age, .ethnicity, .location
             margin 5px
             font-size 15px
-            text-align left
-            background-color white
-            width 400px
-            height 30px
-            border none 
-            border-radius 10px
-        .profile_picture, .gender, .age, .ethnicity, .location
-          margin 5px
-          font-size 15px
-          height 40px
-          label
-            color #a6a6a6
-          select
-            background-color white
-            border none 
-            border-radius 10px
-            height 30px
-        .create-button
-          margin 15px
-          button
-            font-weight bold
-            border-radius 10px
-            cursor pointer
-            padding 5px 10px
-            color rgb(255,255,255)
-            background-color rgb(123,165,221)
-            transition: 0.2s ease
-            &:hover
-              background-color rgb(79,137,212)
+            height 40px
+            label
+              color #a6a6a6
+            select
+              background-color white
+              border none 
+              border-radius 10px
+              height 30px
+          .create-button
+            margin 15px
+            button
+              font-weight bold
+              border-radius 10px
+              cursor pointer
+              padding 5px 10px
+              color rgb(255,255,255)
+              background-color rgb(123,165,221)
+              transition: 0.2s ease
+              &:hover
+                background-color rgb(79,137,212)
 </style>

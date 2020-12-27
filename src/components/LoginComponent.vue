@@ -77,6 +77,10 @@ export default defineComponent({
 
 <style lang='stylus' scoped>
 .logincomponent
+	box-shadow 1px 1px 10px 2px #DCD9D8
+	padding 30px
+	max-width 500px
+	margin auto
 	button, a
 		text-decoration none
 		border none

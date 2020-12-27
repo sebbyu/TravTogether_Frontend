@@ -110,6 +110,10 @@ export default defineComponent({
 
 <style lang='stylus' scoped>
 .findbuddiescomponent
+	box-shadow 1px 1px 10px 2px #DCD9D8
+	padding 30px
+	max-width 1000px
+	margin auto
 	.loggedout
 		-webkit-filter blur(8px)
 	.top-sec
