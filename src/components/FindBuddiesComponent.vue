@@ -1,54 +1,50 @@
 <template lang='pug'>
 .findbuddiescomponent
-	div(:class="{ loggedout: !isAuthenticated }")
-		.top-sec
-			h1 Search Buddies
-			.categories
-				.filters(v-for="(filter, index) in filters" :key="index")
-					.filter
-						button(:class="{selected: filter.filterBool}"
-						@click="filter.filterBool = !filter.filterBool"
-						:disabled="!isAuthenticated") {{ filter.filter }}
-			.search
-				input#search-box(type='search' 
-							name='search-box'
-							placeholder='Search (Country, City, Name, Gender)'
-							v-model="search"
-							:disabled="!isAuthenticated")
-				img(src='@/assets/search-logo.png' alt='search-logo')
-		.mid-sec
-			.logged-in(v-if="isAuthenticated")
-				.results(
-					v-for="(user, index) in userList.filter(user => user.nickname !== currentUser.nickname)" :key="index")
-					.user
-						.profile-picture(style="border:1px solid grey;"
-						@click="userDetail(user)")
-							.has_image(v-if="user.profilePicture")
-								img(:src="user.profilePicture"
-									style="width:180px;height:180px")
-							.no_image(v-else)
-								img(src="@/assets/empty-profile.png"
-									style="width:180px;height:180px")
-						.name(style="border:1px solid grey;border-top:none;border-bottom:none")
-							p(v-if="user.nickname == null") X
-							p(v-else-if="user.nickname.length > 15") 
-								| {{ user.nickname.slice(0,15) }} ...
-							p(v-else) {{ user.nickname }}
-							.male(v-if="user.gender == 'Male'")
-								img(src="@/assets/male-logo.png" alt="gender logo")
-							.female(v-else-if="user.gender == 'Female'")
-								img(src="@/assets/female-logo.png" alt="gender logo")
-							.other(v-else)
-								img(src="@/assets/registration.png" alt="gender logo")
-						.location(style="border:1px solid grey;border-top:none;")
-							img(src="@/assets/location-logo.png" alt="location logo")
-							p(v-if="user.location == ''") X
-							p(v-else-if="user.location.split(',')[0].length + user.location.split(',')[2].length > 20") 
-								| {{ user.location.split(',')[0].slice(0,20) }} ...
-							p(v-else) {{ user.location.split(',')[0] }},
-								| {{ user.location.split(',')[2] }}
-.logged-out(v-if="!isAuthenticated")
-	LoginComponent
+	.top-sec
+		h1 Search Buddies
+		.categories
+			.filters(v-for="(filter, index) in filters" :key="index")
+				.filter
+					button(:class="{selected: filter.filterBool}"
+					@click="filter.filterBool = !filter.filterBool") {{ filter.filter }}
+		.search
+			input#search-box(type='search' 
+						name='search-box'
+						placeholder='Search (Country, City, Name, Gender)'
+						v-model="search"
+						:disabled="!isAuthenticated")
+			img(src='@/assets/search-logo.png' alt='search-logo')
+	.mid-sec
+		.logged-in
+			.results(
+				v-for="(user, index) in userList" :key="index")
+				.user
+					.profile-picture(style="border:1px solid grey;"
+					@click="userDetail(user)")
+						.has_image(v-if="user.profilePicture")
+							img(:src="user.profilePicture"
+								style="width:180px;height:180px")
+						.no_image(v-else)
+							img(src="@/assets/empty-profile.png"
+								style="width:180px;height:180px")
+					.name(style="border:1px solid grey;border-top:none;border-bottom:none")
+						p(v-if="user.nickname == null") X
+						p(v-else-if="user.nickname.length > 15") 
+							| {{ user.nickname.slice(0,15) }} ...
+						p(v-else) {{ user.nickname }}
+						.male(v-if="user.gender == 'Male'")
+							img(src="@/assets/male-logo.png" alt="gender logo")
+						.female(v-else-if="user.gender == 'Female'")
+							img(src="@/assets/female-logo.png" alt="gender logo")
+						.other(v-else)
+							img(src="@/assets/registration.png" alt="gender logo")
+					.location(style="border:1px solid grey;border-top:none;")
+						img(src="@/assets/location-logo.png" alt="location logo")
+						p(v-if="user.location == ''") X
+						p(v-else-if="user.location.split(',')[0].length + user.location.split(',')[2].length > 20") 
+							| {{ user.location.split(',')[0].slice(0,20) }} ...
+						p(v-else) {{ user.location.split(',')[0] }},
+							| {{ user.location.split(',')[2] }}
 </template>
 
 

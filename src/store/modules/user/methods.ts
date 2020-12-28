@@ -158,16 +158,19 @@ export const actions: Action = {
       }
     },
 // =====================================================
-    async ChangeUserImage({commit}, imageForm) {
+    async ChangeUserImage({commit, state}, imageForm) {
       const newImage = new FormData()
-      newImage.append('email', imageForm.email)
-      newImage.append('slug', imageForm.slug)
+      if (state.user) {
+        newImage.append('email', state.user.email)
+        newImage.append('slug', state.user.slug)
+        newImage.append('password', state.user.password)
+      }
       newImage.append('profilePicture', imageForm.profilePicture, imageForm.profilePicture.name)
-      newImage.append('password', imageForm.password)
+      
       try {
-        await axios.put(USERSURL+imageForm.slug+'/', newImage)
+        await axios.put(USERSURL+newImage.get('slug')+'/', newImage)
         commit('setErrorMessage', "")
-        const response = await axios.get(USERSURL+imageForm.slug+'/')
+        const response = await axios.get(USERSURL+newImage.get('slug')+'/')
         commit('setUser', response.data)
       } catch (error) {
         console.log(error + " ERROR CHANGING IMAGE")

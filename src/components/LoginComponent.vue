@@ -23,10 +23,6 @@
 							| Please Try Again.
 						.login-button
 							button(type='submit') Login
-						.social-media-signin
-							p Sign in with:
-							img(src="@/assets/gmail-logo.png")
-							img(src="@/assets/facebook-logo.png")
 			.btm-sec
 				hr
 				p OR
@@ -67,9 +63,8 @@ export default defineComponent({
 			}
 		}
 // ============================================================================
-		return {loginForm,submit,loginError,}
-	}
-
+		return {loginForm,submit,loginError}
+	},
 })
 </script>
 

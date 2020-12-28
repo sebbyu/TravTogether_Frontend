@@ -3,7 +3,7 @@
 	.top-sec
 		h1 About Us
 	.mid-sec
-		h2 What is TravBud
+		h2 What is TravTogether
 		p {{ aboutus }}
 	.btm-dec
 </template>

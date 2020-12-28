@@ -4,6 +4,7 @@
     .top-sec
       img.logo(src='@/assets/registration.png' alt='registration')
       h1 Registration
+      p(style="color:grey") **required** | (Optional)
     .mid-sec
       .form
         form(@submit.prevent="submit")
@@ -13,19 +14,19 @@
           .nickname
             input(v-model="registrationForm.nickname"
                   type='text' name='nickname' 
-            placeholder='Nickname (will be set to your email name if left blank)')
+            placeholder='(Nickname)')
           .profile_picture
-            label(for='profile_picture') Profile Picture 
+            label(for='profile_picture') (Profile Picture) 
             input(@change="fileSelected"
                   type='file' name='profilePicture' accept="image/*")
           .gender
-            label(for='gender') Gender 
+            label(for='gender') (Gender) 
             select(v-model="registrationForm.gender")
               option(label='' selected disabled) --- 
               option(value="Male") Male
               option(value="Female") Female
           .age
-            label(for='age') Age 
+            label(for='age') (Age) 
             select(v-model="registrationForm.age")
               option(label='' selected disabled) --- 
               option(value='10-') 10-
@@ -36,7 +37,7 @@
               option(value="50-60") 50 - 60
               option(value="60+") 60+
           .ethnicity
-            label(for='ethnicity') Ethnicity 
+            label(for='ethnicity') (Ethnicity) 
             select(v-model="registrationForm.ethnicity")
               option(label='' selected disabled) --- 
               option(value="American Indian / Alaska Native") American Indian / Alaska Native

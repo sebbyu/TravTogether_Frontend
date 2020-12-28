@@ -1,5 +1,5 @@
 <template lang='pug'>
-.userdetail(v-if="isAuthenticated")
+.userdetail
   h1 Account
   .profile-image
     input(type="checkbox" id="btnControl")
@@ -9,7 +9,7 @@
         @click="blurBackground")
       .no-profile-image(v-else)
         img(src="@/assets/empty-profile.png" alt="user-profile-picture")
-    h {{ retrievedUser.nickname }}
+    h5 {{ retrievedUser.nickname }}
   .user-info(v-if="!updating")
     .title
       img(src="@/assets/account-logo.png")
@@ -28,10 +28,16 @@
     .user-bio
       h2 bio:
       p.text {{ retrievedUser.bio }}
+    .buttons
+      div(v-if="user && retrievedUser.nickname === user.nickname")
+        button(@click="updating = !updating") Change Info
+      div(v-else)
+        router-link(to="/chat") Chat
+        router-link(to="/message") Send Message
+        button(@click="goBack") Go Back
   .update-info(v-else)
     .buttons
       button(@click="clickImage") Change Image
-    div(v-if="retrievedUser.nickname == user.nickname")
       input(
           type='file'
           style="display:none"
@@ -39,7 +45,7 @@
           accept="image/*"
           @change="changeImage"
         )
-    form
+    form(@submit.prevent="updateProfile")
       .email
         label(for="email") email
         input(v-model="userForm.email" type='text')
@@ -88,18 +94,10 @@
       .password
         label(for="password") password
         input(type='password' v-model="userForm.password")
-  .button
-    div(v-if="updating")
-      button(@click="updateProfile") Update
-      button(@click="updating = !updating") Cancel
-      button(style='background-color:red;') Delete Account
-    div(v-else)
-      div(v-if="retrievedUser.nickname == user.nickname")
-        button(@click="updating = !updating") Change Info
-      div(v-else)
-        router-link(to="/chat") Chat
-        router-link(to="/message") Send Message
-        button(@click="goBack") Go Back
+      .buttons
+        button(type='submit') Update
+        button(@click="updating = !updating") Cancel
+        button(style='background-color:red;') Delete Account
 </template>
 
 
@@ -123,40 +121,32 @@ export default defineComponent({
     const fileInput = ref()
 // ============================================================================
     const userForm = {
-      email: user.email,
-      nickname: user.nickname,
-      slug: user.slug,
-      gender:user.gender,
-      age: user.age,
-      ethnicity: user.ethnicity,
-      location: user.location,
-      bio: user.bio,
+      email: retrievedUser.value.email,
+      nickname: retrievedUser.value.nickname,
+      slug: retrievedUser.value.slug,
+      gender:retrievedUser.value.gender,
+      age: retrievedUser.value.age,
+      ethnicity: retrievedUser.value.ethnicity,
+      location: retrievedUser.value.location,
+      bio: retrievedUser.value.bio,
       password: null,
     }
 // ============================================================================
     const imageForm = {
-      email: "",
-      slug: "",
       profilePicture: null,
-      password: "",
     } as ImageForm
 // ============================================================================
     function clickImage() {
-      if (retrievedUser.value.nickname === user.nickname) {
-        fileInput.value.click()
-      }
+      fileInput.value.click()
     }
 // ============================================================================
     async function changeImage(e: HTMLInputEvent) {
       if (e.target.files) {
         imageForm.profilePicture = e.target.files[0]
-        imageForm.slug = user.slug
-        imageForm.email = user.email
-        imageForm.password = user.password
       }
       try {
         await store.dispatch('user/ChangeUserImage', imageForm)
-        await store.dispatch('user/RetrieveUser', imageForm.slug)
+        await store.dispatch('user/RetrieveUser', user.slug)
       } catch (error) {
         console.log(error + " ERROR CHANGING PROFILEPICTURE")
       }
@@ -168,7 +158,7 @@ export default defineComponent({
         if (errorMessage.value !== "") {
           alert("There was some error while updating")
         } else {
-          await store.dispatch('user/RetrieveUser', userForm.slug)
+          await store.dispatch('user/RetrieveUser', user.slug)
           updating.value = !updating.value
         }
       } catch (error) {
@@ -201,6 +191,19 @@ export default defineComponent({
 
 <style lang='stylus' scoped>
 .userdetail
+  button, a
+    margin 15px
+    border none
+    text-decoration none
+    font-weight bold
+    border-radius 10px
+    cursor pointer
+    padding 5px 10px
+    color rgb(255,255,255)
+    background-color rgb(123,165,221)
+    transition: 0.2s ease
+    &:hover
+      background-color rgb(79,137,212)
   .profile-image
     #btnControl
       display none
@@ -290,21 +293,4 @@ export default defineComponent({
       justify-content center
       textarea
         background-color white
-  // .user-info
-  //   h3
-    // .user-bio
-  .button
-    button, a
-      margin 15px
-      border none
-      text-decoration none
-      font-weight bold
-      border-radius 10px
-      cursor pointer
-      padding 5px 10px
-      color rgb(255,255,255)
-      background-color rgb(123,165,221)
-      transition: 0.2s ease
-      &:hover
-        background-color rgb(79,137,212)
 </style>

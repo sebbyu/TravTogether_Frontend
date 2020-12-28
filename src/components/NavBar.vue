@@ -3,7 +3,7 @@
 	header
 		.logo_bar
 			router-link(to='/')
-				img(src='@/assets/home-logo.png' alt='Home-logo')
+				img.logo(src='@/assets/TravTogether-logo.png' alt='Home-logo')
 		.nav_bar
 			nav
 				ul.nav_ul
@@ -61,12 +61,11 @@ export default defineComponent({
 		display flex
 		justify-content space-between
 		align-items center
-		padding 30px 10%
-
+		padding 30px 5%
 		.logo_bar
-			img
-				height 130px
-				width auto
+			.logo
+				height 60px
+				width 150px
 				curosr pointer
 		.nav_bar
 			nav

@@ -1,27 +1,30 @@
 <template lang='pug'>
 .container
-  .header
-    h3.text-center Chatroom
-    img(src="@/assets/chat-logo.png")
-  .messaging
-    .inbox_msg
-      .inbox_people
-        .headind_srch
-          .recent_heading
-            h4 Recent
-          .srch_bar
-            .stylish-input-group
-              input.search-bar(type='text' placeholder='Search')
-        .inbox_chat
-      .mesgs
-        .msg_history
-        .type_msg
-          .input_msg_write
-            input.write_msg(type='text' placeholder='Type a message')
-            button.msg_send_btn Enter
-  .buttons
-    button.button invite
-    button.button(@click="goBack") Exit
+  .logged-in(v-if='user')
+    .header
+      h3.text-center Chatroom
+      img(src="@/assets/chat-logo.png")
+    .messaging
+      .inbox_msg
+        .inbox_people
+          .headind_srch
+            .recent_heading
+              h4 Recent
+            .srch_bar
+              .stylish-input-group
+                input.search-bar(type='text' placeholder='Search')
+          .inbox_chat
+        .mesgs
+          .msg_history
+          .type_msg
+            .input_msg_write
+              input.write_msg(type='text' placeholder='Type a message')
+              button.msg_send_btn Enter
+    .buttons
+      button.button invite
+      button.button(@click="goBack") Exit
+  .logged-out(v-else)
+    LoginComponent
 </template>
 
 
@@ -29,16 +32,22 @@
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import router from '@/router'
+import {useStore} from 'vuex'
+import LoginComponent from '@/components/LoginComponent.vue'
 export default defineComponent({
   name: "Chatroom",
+  components: {
+    LoginComponent,
+  },
   setup() {
+    const store = useStore()
+    const user = store.getters['user/getUser']
     function goBack() {
       router.go(-1)
     }
 // ============================================================================
-    return {goBack,}
+    return {goBack,user}
   }
-
 })
 </script>
 
