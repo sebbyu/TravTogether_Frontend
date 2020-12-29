@@ -138,7 +138,8 @@ export const actions: Action = {
   },
 // =====================================================
   async GetUser({commit}, userForm) {
-    const slug = slugify(userForm.get('email').split('@')[0])
+    let slug = slugify(userForm.get('email').split('@')[0])
+    slug = slug.replaceAll('.', '')
     try {
       const response = await axios.get(USERSURL+slug)
       commit('setErrorMessage', "")

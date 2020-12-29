@@ -4,15 +4,11 @@
   .profile-image
     input(type="checkbox" id="btnControl")
     label(for="btnControl")
-      .firebase(v-if="retrievedUser.fromFirebase")
-        img(:src="googleUser.photoURL" alt="user-profile-picture"
+      .has-profile-image(v-if="retrievedUser.profilePicture !== null")
+        img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
         @click="blurBackground")
-      .local(v-else)
-        .has-profile-image(v-if="retrievedUser.profilePicture !== null")
-          img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
-          @click="blurBackground")
-        .no-profile-image(v-else)
-          img(src="@/assets/empty-profile.png" alt="user-profile-picture")
+      .no-profile-image(v-else)
+        img(src="@/assets/empty-profile.png" alt="user-profile-picture")
     h5 {{ retrievedUser.nickname }}
   .user-info(v-if="!updating")
     .title
@@ -41,7 +37,7 @@
         router-link(to="/message") Send Message
         button(@click="goBack") Go Back
   .update-info(v-else)
-    .buttons(v-if="!googleUser")
+    .buttons
       button(@click="clickImage") Change Image
       input(
           type='file'
@@ -53,7 +49,11 @@
     form(@submit.prevent="updateProfile")
       .email
         label(for="email") email
-        input(v-model="userForm.email" type='text')
+        div(v-if="retrievedUser.fromFirebase")
+          input(v-model="userForm.email" type='text' disabled
+          style="background-color:lightgrey")
+        div(v-else)
+          input(v-model="userForm.email" type='text')
       .nickname
         label(for="nickname") nickname
         input(v-model="userForm.nickname")
@@ -96,7 +96,7 @@
       .bio
         label(for="bio") Bio
         textarea(v-model="userForm.bio" cols="70" rows="5")
-      .password
+      .password(v-if="!retrievedUser.fromFirebase")
         label(for="password") password
         input(type='password' v-model="userForm.password")
       .buttons

@@ -21,16 +21,12 @@
 				.user
 					.profile-picture(style="border:1px solid grey;"
 					@click="userDetail(user)")
-						.firebase(v-if="user.fromFirebase")
-							img(:src="googleUser.photoURL"
+						.has_image(v-if="user.profilePicture")
+							img(:src="user.profilePicture"
 								style="width:180px;height:180px")
-						.local(v-else)
-							.has_image(v-if="user.profilePicture")
-								img(:src="user.profilePicture"
-									style="width:180px;height:180px")
-							.no_image(v-else)
-								img(src="@/assets/empty-profile.png"
-									style="width:180px;height:180px")
+						.no_image(v-else)
+							img(src="@/assets/empty-profile.png"
+								style="width:180px;height:180px")
 					.name(style="border:1px solid grey;border-top:none;border-bottom:none")
 						p(v-if="user.nickname == null") X
 						p(v-else-if="user.nickname.length > 15") 

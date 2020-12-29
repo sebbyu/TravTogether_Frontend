@@ -32,15 +32,21 @@
 import {defineComponent, computed} from 'vue'
 import {useStore} from 'vuex'
 import router from '@/router'
+import firebase from 'firebase/app'
 export default defineComponent({
 	name: "NavBar",
 	setup() {
 		const store = useStore()
 		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
 		const user = computed(() => store.getters['user/getUser'])
+		const googleUser = computed(() => firebase.auth().currentUser)
 // ============================================================================
 		async function logout() {
 			await store.dispatch('user/Logout')
+			if (googleUser.value) {
+				await firebase.auth().signOut()
+				console.log("Logged out Google Account")
+			}
 			router.push('/login')
 		}
 // ============================================================================
