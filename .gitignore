@@ -24,3 +24,5 @@ pnpm-debug.log*
 
 # invalid header
 vue.config.js
+
+.env
