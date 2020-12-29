@@ -21,12 +21,16 @@
 				.user
 					.profile-picture(style="border:1px solid grey;"
 					@click="userDetail(user)")
-						.has_image(v-if="user.profilePicture")
-							img(:src="user.profilePicture"
+						.firebase(v-if="user.fromFirebase")
+							img(:src="googleUser.photoURL"
 								style="width:180px;height:180px")
-						.no_image(v-else)
-							img(src="@/assets/empty-profile.png"
-								style="width:180px;height:180px")
+						.local(v-else)
+							.has_image(v-if="user.profilePicture")
+								img(:src="user.profilePicture"
+									style="width:180px;height:180px")
+							.no_image(v-else)
+								img(src="@/assets/empty-profile.png"
+									style="width:180px;height:180px")
 					.name(style="border:1px solid grey;border-top:none;border-bottom:none")
 						p(v-if="user.nickname == null") X
 						p(v-else-if="user.nickname.length > 15") 
@@ -55,6 +59,7 @@ import {useStore} from 'vuex'
 import LoginComponent from '@/components/LoginComponent.vue'
 import router from '@/router'
 import {User} from '@/store/modules/user/types'
+import firebase from 'firebase/app'
 export default defineComponent({
 	name: "FindBuddiesComponent",
 	components: {
@@ -67,6 +72,7 @@ export default defineComponent({
 		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
 		const currentUser = computed(() => store.getters['user/getUser'])
 		const userList = computed(() => store.getters['user/getAllUsers'])
+		const googleUser = computed(() => firebase.auth().currentUser)
 // ============================================================================
 		interface Filter {
 			filter: string;
@@ -97,7 +103,8 @@ export default defineComponent({
 			await router.push('/user/'+user.slug)
 		}
 // ============================================================================
-		return {search,filters,userList,currentUser,isAuthenticated,userDetail}
+		return {search,filters,userList,currentUser,isAuthenticated,userDetail,
+		googleUser,}
 	}
 })
 </script>

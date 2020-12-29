@@ -58,15 +58,17 @@ export const actions: Action = {
     userForm.append('nickname', User.nickname)
     if (User.profilePicture) {
       userForm.append('profilePicture', User.profilePicture, User.profilePicture.name)
+      console.log(User.profilePicture)
     }
     userForm.append('gender', User.gender)
     userForm.append('age', User.age)
     userForm.append('ethnicity', User.ethnicity)
     userForm.append('location', User.location)
-    userForm.append('password', User.password1)
+    userForm.append('fromFirebase', User.fromFirebase)
+    userForm.append('password', User.password)
     try {
       await axios.post(USERSURL, userForm)
-      console.log('Register User')
+      console.log('A new user registered')
       commit('setErrorMessage', "")
     } catch (error) {
       console.log(error.message + " post error")

@@ -23,6 +23,9 @@
 							| Please Try Again.
 						.login-button
 							button(type='submit') Login
+						.social-media-signin
+							p Sign in with
+							img(src="@/assets/google-logo.png" @click="googleSignin")
 			.btm-sec
 				hr
 				p OR
@@ -36,6 +39,8 @@
 import {defineComponent, computed, ref} from 'vue'
 import {useStore} from 'vuex'
 import router from '@/router'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 export default defineComponent({
 	name: "LoginComponent",
 	setup() {
@@ -63,7 +68,50 @@ export default defineComponent({
 			}
 		}
 // ============================================================================
-		return {loginForm,submit,loginError}
+		async function googleSignin() {
+			const provider = new firebase.auth.GoogleAuthProvider()
+			try {
+				await firebase.auth().signInWithPopup(provider)
+				console.log("Logged in with google account")
+				const googleUser = firebase.auth().currentUser
+				if (googleUser) {
+					let password = ""
+					if (googleUser.email) {
+						password = googleUser.email.split('@')[0]
+					}
+
+					const newUserForm = {
+						email: googleUser.email,
+						nickname: googleUser.displayName,
+						age: "",
+						ethnicity: "",
+						gender: "",
+						location: "",
+						fromFirebase: true,
+						password: password,
+					}
+					try {
+						await store.dispatch('user/RegisterNewUser', newUserForm)
+						const tempForm = new FormData()
+						if (newUserForm.email) {
+							tempForm.append('email', newUserForm.email)
+						}
+						await store.dispatch('user/GetUser', tempForm)
+						await router.replace('/')
+					} catch(error) {
+							const tempForm = new FormData()
+							if (newUserForm.email) {
+								tempForm.append('email', newUserForm.email)
+							}
+							await store.dispatch('user/GetUser', tempForm)
+							await router.replace('/')
+						}
+				} 
+			} catch (error) {
+				console.log(error.message)
+			}
+		}
+		return {loginForm,submit,loginError,googleSignin,}
 	},
 })
 </script>

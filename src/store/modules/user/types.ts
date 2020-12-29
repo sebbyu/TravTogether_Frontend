@@ -17,6 +17,7 @@ export interface User {
 	age: string;
 	ethnicity: string;
 	location: string;
+	fromFirebase: boolean;
 	password: string;
 }
 
@@ -28,7 +29,8 @@ export interface RegistrationForm {
 	age: string;
 	ethnicity: string;
 	location: string;
-	password1: string;
+	fromFirebase: boolean;
+	password: string;
 	password2: string;
 }
 

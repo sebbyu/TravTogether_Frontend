@@ -4,11 +4,15 @@
   .profile-image
     input(type="checkbox" id="btnControl")
     label(for="btnControl")
-      .has-profile-image(v-if="retrievedUser.profilePicture !== null")
-        img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
+      .firebase(v-if="retrievedUser.fromFirebase")
+        img(:src="googleUser.photoURL" alt="user-profile-picture"
         @click="blurBackground")
-      .no-profile-image(v-else)
-        img(src="@/assets/empty-profile.png" alt="user-profile-picture")
+      .local(v-else)
+        .has-profile-image(v-if="retrievedUser.profilePicture !== null")
+          img(:src="retrievedUser.profilePicture" alt="user-profile-picture"
+          @click="blurBackground")
+        .no-profile-image(v-else)
+          img(src="@/assets/empty-profile.png" alt="user-profile-picture")
     h5 {{ retrievedUser.nickname }}
   .user-info(v-if="!updating")
     .title
@@ -31,12 +35,13 @@
     .buttons
       div(v-if="user && retrievedUser.nickname === user.nickname")
         button(@click="updating = !updating") Change Info
+        button(@click="goBack") Go Back
       div(v-else)
         router-link(to="/chat") Chat
         router-link(to="/message") Send Message
         button(@click="goBack") Go Back
   .update-info(v-else)
-    .buttons
+    .buttons(v-if="!googleUser")
       button(@click="clickImage") Change Image
       input(
           type='file'
@@ -108,6 +113,7 @@ import {useStore} from 'vuex'
 import { parse } from "papaparse"
 import router from '@/router'
 import {HTMLInputEvent, ImageForm} from '@/store/modules/user/types'
+import firebase from 'firebase/app'
 export default defineComponent({
   name: "UserDetail",
   setup() {
@@ -119,6 +125,7 @@ export default defineComponent({
     const updating = ref(false)
     const locations = ref()
     const fileInput = ref()
+    const googleUser = firebase.auth().currentUser
 // ============================================================================
     const userForm = {
       email: retrievedUser.value.email,
@@ -182,7 +189,7 @@ export default defineComponent({
 // ============================================================================
     return {user,isAuthenticated,updating,updateProfile,userForm,
     locations,retrievedUser,fileInput,changeImage,clickImage,goBack,
-    }
+    googleUser,}
   }
 })
 </script>

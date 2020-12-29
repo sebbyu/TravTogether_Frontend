@@ -56,8 +56,8 @@
                 .without-state(v-else)
                   | {{ location.city }}, {{ location.country }}
           .password1
-            input(v-model="registrationForm.password1"
-            type='password' name='password1' placeholder='**Password**')
+            input(v-model="registrationForm.password"
+            type='password' name='password' placeholder='**Password**')
           .password2
             input(v-model="registrationForm.password2"
             type='password' name='password2' placeholder='**Re-enter Password**')
@@ -92,7 +92,8 @@ export default defineComponent({
       age: "",
       ethnicity: "",
       location: "",
-      password1: "",
+      fromFirebase: false,
+      password: "",
       password2: "",
     }
 // ============================================================================
@@ -115,7 +116,7 @@ export default defineComponent({
     async function submit() {
       if (registrationForm.email === "" ||
       registrationForm.location === "" ||
-      registrationForm.password1 === "" ||
+      registrationForm.password === "" ||
       registrationForm.password2 === "") {
         alert("fill up")
       } else {
