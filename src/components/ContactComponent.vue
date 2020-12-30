@@ -2,30 +2,36 @@
 .contactcomponent
 	.container
 		.top-sec
+			div(v-if="sent === true")
+				p.alert.success 
+					| Message is successfully sent.
+			div(v-else-if="sent === false")
+				p.alert.fail
+					| There was some problem. Please try again.
 			h1 Contact Us
 		.mid-sec
 			.input
-				form
+				form(@submit.prevent="sendMessage")
 					.name
-						input(type='text' placeholder='Name')
+						input(type='text' placeholder='Name' v-model="contactForm.name")
 					.email
-						input(type='email' placeholder='Email')
+						input(type='email' placeholder='Email' v-model="contactForm.fromEmail")
 						p#email-msg
 						| Please use a REAL email address so we can get back to you.
 					.subject
-						input(type='text' placeholder='Subject')
+						input(type='text' placeholder='Subject' v-model="contactForm.subject")
 					.message
 						textarea#message-msg(name='message-msg'
 									cols='70'
 									rows='15'
-									placeholder='Message')
+									placeholder='Message' v-model="contactForm.message")
 					.send-a-copy
 						input#send--copy(type='checkbox'
 									name='send-a-copy'
-									value='Send me a copy')
+									value='Send me a copy' v-model="contactForm.sendCopy")
 						label(for='send-a-copy') Send me a copy
-			.button
-				button Send Message
+					.button
+						button(type='submit') Send Message
 	.btm-sec
 		hr
 		h3 Feel Like Talking?
@@ -37,9 +43,40 @@
 
 
 <script lang='ts'>
-import {defineComponent} from 'vue'
+import {defineComponent, ref} from 'vue'
+import {useStore} from 'vuex'
 export default defineComponent({
+	name: "ContactComponent",
+	setup() {
 
+		const store = useStore()
+		const sent = ref()
+
+		const contactForm = {
+			name: "",
+			fromEmail: "",
+			subject: "",
+			message: "",
+			sendCopy: false,
+		}
+
+		async function sendMessage() {
+			if (contactForm.name && contactForm.subject && contactForm.message) {
+				try {
+					await store.dispatch("user/sendMessage", contactForm)
+					console.log("Message Sent")
+					sent.value = true
+				} catch (error) {
+					console.log(error.message)
+					sent.value = false
+				}
+			} else {
+				alert("Please fillout all the fields.")
+			}
+		}
+
+		return {contactForm,sendMessage,sent}
+	}
 })
 </script>
 
@@ -53,6 +90,14 @@ export default defineComponent({
 		max-width 1000px
 		margin auto
 		.top-sec
+			.alert
+				font-weight bold
+				padding 20px
+			.success
+				background-color #ADFF2F
+			.fail
+				background-color #FF0000
+
 			p
 				margin 40px
 		.mid-sec
@@ -76,20 +121,20 @@ export default defineComponent({
 						background-color white
 						border none
 						border-radius 10px
-			.button
-				margin 35px
-				button
-					font-weight bold
-					font-size 15px
-					color white
-					padding 9px 25px 
-					border none
-					border-radius 10px
-					background-color rgb(123,165,221)
-					cursor pointer
-					transition 0.2 ease
-					&:hover
-						background-color rgb(73,136,218)
+				.button
+					margin 35px
+					button
+						font-weight bold
+						font-size 15px
+						color white
+						padding 9px 25px 
+						border none
+						border-radius 10px
+						background-color rgb(123,165,221)
+						cursor pointer
+						transition 0.2 ease
+						&:hover
+							background-color rgb(73,136,218)
 	.btm-sec
 		margin 50px
 		h3 

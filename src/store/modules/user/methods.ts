@@ -2,6 +2,7 @@ import {Getter, Mutation, Action} from '@/store/modules/user/types'
 import axios from 'axios'
 import slugify from 'slugify'
 
+const LOCALHOST = "http://127.0.0.1:8000/"
 const USERSURL = "http://127.0.0.1:8000/users/"
 const AUTHENTICATIONURL = "http://127.0.0.1:8000/authentication/"
 
@@ -71,7 +72,7 @@ export const actions: Action = {
       console.log('A new user registered')
       commit('setErrorMessage', "")
     } catch (error) {
-      console.log(error.message + " post error")
+      console.log(error.message + " ERROR REGISTERING USER")
       commit('setErrorMessage', error.message)
     }
   },
@@ -98,7 +99,8 @@ export const actions: Action = {
       commit('setErrorMessage', "")
       await commit('setUser', response.data)
     } catch (error) {
-      commit('setErrorMessage', error)
+      console.log(error.message + " ERROR UPDATTING USER")
+      commit('setErrorMessage', error.message)
     }
   },
 // =====================================================
@@ -108,8 +110,8 @@ export const actions: Action = {
       commit('setErrorMessage', "")
       commit('setRetrievedUser', response.data)
     } catch (error) {
-      commit('setErrorMessage', error)
-      console.log(error + " ERROR RETRIEVING USER")
+      console.log(error.message + " ERROR RETRIEVING USER")
+      commit('setErrorMessage', error.message)
     }
   },
 // =====================================================
@@ -119,8 +121,8 @@ export const actions: Action = {
       commit('setErrorMessage', "")
       commit('setAllUsers', response.data)
     } catch (error) {
-      console.log(error + " ERROR GETTING ALL USERS")
-      commit('setErrorMessage', error)
+      console.log(error.message + " ERROR GETTING ALL USERS")
+      commit('setErrorMessage', error.message)
     }
   },
 // =====================================================
@@ -132,8 +134,8 @@ export const actions: Action = {
       await axios.post(AUTHENTICATIONURL, userForm)
       await dispatch('GetUser', userForm)
     } catch(error) {
-      console.log(error + " ERROR LOGGING IN")
-      commit('setErrorMessage', error)
+      console.log(error.message + " ERROR LOGINNING IN")
+      commit('setErrorMessage', error.message)
     }
   },
 // =====================================================
@@ -145,8 +147,8 @@ export const actions: Action = {
       commit('setErrorMessage', "")
       await commit('setUser', response.data)
     } catch (error) {
-      console.log(error + " GET USER ERROR")
-      commit('setErrorMessage', error)
+      console.log(error.message + " ERROR GETTING USER")
+      commit('setErrorMessage', error.message)
     }
   },
 // =====================================================
@@ -156,8 +158,8 @@ export const actions: Action = {
         
         commit("setImage", response.data)
       } catch(error) {
-        console.log(error + " ERROR FETCHING IMAGE")
-        
+        console.log(error.message + " ERROR GETTING USER IMAGE")
+        commit('setErrorMessage', error.message)
       }
     },
 // =====================================================
@@ -176,12 +178,27 @@ export const actions: Action = {
         const response = await axios.get(USERSURL+newImage.get('slug')+'/')
         commit('setUser', response.data)
       } catch (error) {
-        console.log(error + " ERROR CHANGING IMAGE")
-        commit('setErrorMessage', error)
-      }
+        console.log(error.message + " ERROR CHANGING IMAGE")
+        commit('setErrorMessage', error.message)      }
     },
 // =====================================================
   Logout({commit}) {
     commit("logout")
   },
+// =====================================================
+  async sendMessage({commit}, contactForm) {
+    const messageForm = new FormData()
+    messageForm.append("name", contactForm.name)
+    messageForm.append("fromEmail", contactForm.fromEmail)
+    messageForm.append("subject", contactForm.subject)
+    messageForm.append("message", contactForm.message)
+    messageForm.append("sendCopy", contactForm.sendCopy)
+    try {
+      await axios.post(LOCALHOST+"sendmessage/", messageForm)
+      commit('setErrorMessage', "")
+    } catch (error) {
+      console.log(error.message + " ERROR SENDING MESSAGE")
+      commit('setErrorMessage', error.message)
+    }
+  }
 }
