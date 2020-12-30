@@ -15,7 +15,11 @@
 					.name
 						input(type='text' placeholder='Name' v-model="contactForm.name")
 					.email
-						input(type='email' placeholder='Email' v-model="contactForm.fromEmail")
+						div(v-if="isAuthenticated")
+							input(type='email' placeholder='Email' v-model="user.email"
+							disabled style="background-color:#d3d3d3")
+						div(v-else)
+							input(type='email' placeholder='Email' v-model="contactForm.fromEmail")
 						p#email-msg
 						| Please use a REAL email address so we can get back to you.
 					.subject
@@ -25,11 +29,11 @@
 									cols='70'
 									rows='15'
 									placeholder='Message' v-model="contactForm.message")
-					.send-a-copy
-						input#send--copy(type='checkbox'
-									name='send-a-copy'
-									value='Send me a copy' v-model="contactForm.sendCopy")
-						label(for='send-a-copy') Send me a copy
+					//- .send-a-copy
+					//- 	input#send--copy(type='checkbox'
+					//- 				name='send-a-copy'
+					//- 				value='Send me a copy' v-model="contactForm.sendCopy")
+					//- 	label(for='send-a-copy') Send me a copy
 					.button
 						button(type='submit') Send Message
 	.btm-sec
@@ -48,10 +52,11 @@ import {useStore} from 'vuex'
 export default defineComponent({
 	name: "ContactComponent",
 	setup() {
-
 		const store = useStore()
 		const sent = ref()
-
+		const isAuthenticated = store.getters['user/isAuthenticated']
+		const user = store.getters['user/getUser']
+// ============================================================================
 		const contactForm = {
 			name: "",
 			fromEmail: "",
@@ -59,13 +64,22 @@ export default defineComponent({
 			message: "",
 			sendCopy: false,
 		}
-
+// ============================================================================
 		async function sendMessage() {
-			if (contactForm.name && contactForm.subject && contactForm.message) {
+			if (isAuthenticated){
+					contactForm.fromEmail = user.email
+				}
+			if (contactForm.name && contactForm.subject && contactForm.message 
+			&& contactForm.fromEmail) {
 				try {
 					await store.dispatch("user/sendMessage", contactForm)
 					console.log("Message Sent")
 					sent.value = true
+					contactForm.name = ""
+					contactForm.fromEmail = ""
+					contactForm.subject = ""
+					contactForm.message = ""
+					contactForm.sendCopy = false
 				} catch (error) {
 					console.log(error.message)
 					sent.value = false
@@ -74,8 +88,8 @@ export default defineComponent({
 				alert("Please fillout all the fields.")
 			}
 		}
-
-		return {contactForm,sendMessage,sent}
+// ============================================================================
+		return {contactForm,sendMessage,sent,isAuthenticated,user}
 	}
 })
 </script>
@@ -97,7 +111,6 @@ export default defineComponent({
 				background-color #ADFF2F
 			.fail
 				background-color #FF0000
-
 			p
 				margin 40px
 		.mid-sec
