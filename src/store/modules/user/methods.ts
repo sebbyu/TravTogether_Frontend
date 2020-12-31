@@ -152,35 +152,35 @@ export const actions: Action = {
     }
   },
 // =====================================================
-    async GetUserImage({commit}, imageURL) {
-      try {
-        const response = await axios.get(imageURL)
-        
-        commit("setImage", response.data)
-      } catch(error) {
-        console.log(error.message + " ERROR GETTING USER IMAGE")
-        commit('setErrorMessage', error.message)
-      }
-    },
-// =====================================================
-    async ChangeUserImage({commit, state}, imageForm) {
-      const newImage = new FormData()
-      if (state.user) {
-        newImage.append('email', state.user.email)
-        newImage.append('slug', state.user.slug)
-        newImage.append('password', state.user.password)
-      }
-      newImage.append('profilePicture', imageForm.profilePicture, imageForm.profilePicture.name)
+  async GetUserImage({commit}, imageURL) {
+    try {
+      const response = await axios.get(imageURL)
       
-      try {
-        await axios.put(USERSURL+newImage.get('slug')+'/', newImage)
-        commit('setErrorMessage', "")
-        const response = await axios.get(USERSURL+newImage.get('slug')+'/')
-        commit('setUser', response.data)
-      } catch (error) {
-        console.log(error.message + " ERROR CHANGING IMAGE")
-        commit('setErrorMessage', error.message)      }
-    },
+      commit("setImage", response.data)
+    } catch(error) {
+      console.log(error.message + " ERROR GETTING USER IMAGE")
+      commit('setErrorMessage', error.message)
+    }
+  },
+// =====================================================
+  async ChangeUserImage({commit, state}, imageForm) {
+    const newImage = new FormData()
+    if (state.user) {
+      newImage.append('email', state.user.email)
+      newImage.append('slug', state.user.slug)
+      newImage.append('password', state.user.password)
+    }
+    newImage.append('profilePicture', imageForm.profilePicture, imageForm.profilePicture.name)
+    
+    try {
+      await axios.put(USERSURL+newImage.get('slug')+'/', newImage)
+      commit('setErrorMessage', "")
+      const response = await axios.get(USERSURL+newImage.get('slug')+'/')
+      commit('setUser', response.data)
+    } catch (error) {
+      console.log(error.message + " ERROR CHANGING IMAGE")
+      commit('setErrorMessage', error.message)      }
+  },
 // =====================================================
   Logout({commit}) {
     commit("logout")
@@ -189,12 +189,27 @@ export const actions: Action = {
   async sendMessage({commit}, contactForm) {
     const messageForm = new FormData()
     messageForm.append("name", contactForm.name)
-    messageForm.append("fromEmail", contactForm.fromEmail)
+    messageForm.append("sendFrom", contactForm.sendFrom)
     messageForm.append("subject", contactForm.subject)
     messageForm.append("message", contactForm.message)
-    messageForm.append("sendCopy", contactForm.sendCopy)
     try {
       await axios.post(LOCALHOST+"sendmessage/", messageForm)
+      commit('setErrorMessage', "")
+    } catch (error) {
+      console.log(error.message + " ERROR SENDING MESSAGE")
+      commit('setErrorMessage', error.message)
+    }
+  },
+// =====================================================
+  async sendEmail({commit}, Form) {
+    const messageForm = new FormData()
+    messageForm.append('name', Form.name)
+    messageForm.append("name", Form.sendTo)
+    messageForm.append("sendFrom", Form.sendFrom)
+    messageForm.append("subject", Form.subject)
+    messageForm.append("message", Form.message)
+    try {
+      await axios.post(LOCALHOST+"sendemail/", messageForm)
       commit('setErrorMessage', "")
     } catch (error) {
       console.log(error.message + " ERROR SENDING MESSAGE")

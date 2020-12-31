@@ -19,7 +19,7 @@
 							input(type='email' placeholder='Email' v-model="user.email"
 							disabled style="background-color:#d3d3d3")
 						div(v-else)
-							input(type='email' placeholder='Email' v-model="contactForm.fromEmail")
+							input(type='email' placeholder='Email' v-model="contactForm.sendFrom")
 						p#email-msg
 						| Please use a REAL email address so we can get back to you.
 					.subject
@@ -29,11 +29,6 @@
 									cols='70'
 									rows='15'
 									placeholder='Message' v-model="contactForm.message")
-					//- .send-a-copy
-					//- 	input#send--copy(type='checkbox'
-					//- 				name='send-a-copy'
-					//- 				value='Send me a copy' v-model="contactForm.sendCopy")
-					//- 	label(for='send-a-copy') Send me a copy
 					.button
 						button(type='submit') Send Message
 	.btm-sec
@@ -58,28 +53,26 @@ export default defineComponent({
 		const user = store.getters['user/getUser']
 // ============================================================================
 		const contactForm = {
+			sendFrom: "",
 			name: "",
-			fromEmail: "",
 			subject: "",
 			message: "",
-			sendCopy: false,
 		}
 // ============================================================================
 		async function sendMessage() {
 			if (isAuthenticated){
-					contactForm.fromEmail = user.email
+					contactForm.sendFrom = user.email
 				}
 			if (contactForm.name && contactForm.subject && contactForm.message 
-			&& contactForm.fromEmail) {
+			&& contactForm.sendFrom) {
 				try {
 					await store.dispatch("user/sendMessage", contactForm)
 					console.log("Message Sent")
 					sent.value = true
 					contactForm.name = ""
-					contactForm.fromEmail = ""
+					contactForm.sendFrom = ""
 					contactForm.subject = ""
 					contactForm.message = ""
-					contactForm.sendCopy = false
 				} catch (error) {
 					console.log(error.message)
 					sent.value = false
