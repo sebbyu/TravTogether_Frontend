@@ -66,7 +66,7 @@ export default defineComponent({
 			if (contactForm.name && contactForm.subject && contactForm.message 
 			&& contactForm.sendFrom) {
 				try {
-					await store.dispatch("user/sendMessage", contactForm)
+					await store.dispatch("user/SendMessage", contactForm)
 					console.log("Message Sent")
 					sent.value = true
 					contactForm.name = ""

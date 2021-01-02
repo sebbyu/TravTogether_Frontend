@@ -186,7 +186,7 @@ export const actions: Action = {
     commit("logout")
   },
 // =====================================================
-  async sendMessage({commit}, contactForm) {
+  async SendMessage({commit}, contactForm) {
     const messageForm = new FormData()
     messageForm.append("name", contactForm.name)
     messageForm.append("sendFrom", contactForm.sendFrom)
@@ -201,7 +201,7 @@ export const actions: Action = {
     }
   },
 // =====================================================
-  async sendEmail({commit}, Form) {
+  async SendEmail({commit}, Form) {
     const messageForm = new FormData()
     messageForm.append('name', Form.name)
     messageForm.append("name", Form.sendTo)
@@ -215,5 +215,14 @@ export const actions: Action = {
       console.log(error.message + " ERROR SENDING MESSAGE")
       commit('setErrorMessage', error.message)
     }
-  }
+  },
+// =====================================================
+// =====================================================
+// =====================================================
+// =====================================================
+// =====================================================
+// =====================================================
+// =====================================================
+// =====================================================
+
 }

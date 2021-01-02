@@ -14,14 +14,21 @@
               .stylish-input-group
                 input.search-bar(type='text' placeholder='Search')
           .inbox_chat
-        .mesgs
+            .chatroom(v-for="(chat, index) in chats" :key="index"
+            @click="setMessages(chat.messages)")
+              | {{ chat.title }}
+              br
+              | {{ chat.created }}
+        .msgs
           .msg_history
+            .msg(v-for="(msg, msgIndex) in messages" :key="msgIndex")
+              | {{ msg }}
           .type_msg
             .input_msg_write
               input.write_msg(type='text' placeholder='Type a message')
               button.msg_send_btn Enter
     .buttons
-      button.button invite
+      button.button Invite +
       button.button(@click="goBack") Exit
   .logged-out(v-else)
     LoginComponent
@@ -30,7 +37,7 @@
 
 
 <script lang='ts'>
-import {defineComponent} from 'vue'
+import {defineComponent, computed, ref} from 'vue'
 import router from '@/router'
 import {useStore} from 'vuex'
 import LoginComponent from '@/components/LoginComponent.vue'
@@ -42,11 +49,23 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const user = store.getters['user/getUser']
+    store.dispatch("chat/GetChats")
+    const chats = computed(() => store.getters['chat/getChats'])
+    const messages = ref()
+// ============================================================================
     function goBack() {
       router.go(-1)
     }
 // ============================================================================
-    return {goBack,user}
+    function setMessages(msgs: Array<string>) {
+      messages.value = msgs
+    }
+// ============================================================================
+// ============================================================================
+// ============================================================================
+// ============================================================================
+// ============================================================================
+    return {goBack,user,chats,messages,setMessages}
   }
 })
 </script>
@@ -98,11 +117,25 @@ export default defineComponent({
                 width 80%
                 padding 2px 0 4px 6px
                 background none
+                outline none
         .inbox_chat
           height 550px
           overflow-y scroll
           background-color #f5f5f5
-      .mesgs
+          .chatroom
+            background-color #FFD700
+            border 1px solid black
+            margin 2px
+            height 70px
+            display flex
+            justify-content center
+            align-items center
+            font-weight bold
+            cursor pointer
+            transition: 0.3s ease
+            &:hover
+              transform: scale(0.9)
+      .msgs
         float right
         padding 30px 15px 0 25px
         width 60%

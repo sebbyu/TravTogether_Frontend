@@ -64,7 +64,7 @@ export default defineComponent({
 // ============================================================================
     async function sendMessage() {
       try {
-        await store.dispatch('user/sendMessage', messageForm)
+        await store.dispatch('user/SendMessage', messageForm)
         sent.value = true
         console.log("message sent")
 
