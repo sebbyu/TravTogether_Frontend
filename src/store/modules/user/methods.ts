@@ -201,11 +201,13 @@ export const actions: Action = {
     }
   },
 // =====================================================
-  async SendEmail({commit}, Form) {
+  async SendEmail({commit, state}, Form) {
     const messageForm = new FormData()
-    messageForm.append('name', Form.name)
+    if (state.user) {
+      messageForm.append('name', state.user.nickname)
+      messageForm.append('sendFrom', state.user.email)
+    }
     messageForm.append("name", Form.sendTo)
-    messageForm.append("sendFrom", Form.sendFrom)
     messageForm.append("subject", Form.subject)
     messageForm.append("message", Form.message)
     try {

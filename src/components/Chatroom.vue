@@ -15,20 +15,24 @@
                 input.search-bar(type='text' placeholder='Search')
           .inbox_chat
             .chatroom(v-for="(chat, index) in chats" :key="index"
-            @click="setMessages(chat.messages)")
+            @click="setChat(chat)" 
+            :class="{'selected': selected === chat.id, 'notSelected': selected !== chat.id}")
               | {{ chat.title }}
               br
               | {{ chat.created }}
         .msgs
           .msg_history
             .msg(v-for="(msg, msgIndex) in messages" :key="msgIndex")
-              | {{ msg }}
+              | {{ msg.text }}
           .type_msg
-            .input_msg_write
-              input.write_msg(type='text' placeholder='Type a message')
-              button.msg_send_btn Enter
+            form.input_msg_write(@submit.prevent="sendChat")
+              input.write_msg(type='text' placeholder='Type a message' 
+              v-model="messageForm.newText"
+              :class="{'disabled': selected === 0, 'active': selected !== 0}")
+              button.msg_send_btn(type="submit"
+              :class="{'disabled': selected === 0, 'active': selected !== 0}") Enter
     .buttons
-      button.button Invite +
+      button.button(@click="invite") Invite +
       button.button(@click="goBack") Exit
   .logged-out(v-else)
     LoginComponent
@@ -37,10 +41,11 @@
 
 
 <script lang='ts'>
-import {defineComponent, computed, ref} from 'vue'
+import {defineComponent, reactive, computed, ref} from 'vue'
 import router from '@/router'
 import {useStore} from 'vuex'
 import LoginComponent from '@/components/LoginComponent.vue'
+import {Chat} from '@/store/modules/chat/types'
 export default defineComponent({
   name: "Chatroom",
   components: {
@@ -51,21 +56,43 @@ export default defineComponent({
     const user = store.getters['user/getUser']
     store.dispatch("chat/GetChats")
     const chats = computed(() => store.getters['chat/getChats'])
+    const chat = ref()
+    const selected = ref(0)
     const messages = ref()
+// ============================================================================
+    const messageForm = reactive({
+      chatId: 0,
+      newText: "",
+      userNickname: "", 
+    })
 // ============================================================================
     function goBack() {
       router.go(-1)
     }
 // ============================================================================
-    function setMessages(msgs: Array<string>) {
-      messages.value = msgs
+    async function setChat(c: Chat) {
+      messageForm.chatId = c.id
+      messages.value = c.messages
+      selected.value = c.id
+    }
+// ============================================================================
+    async function sendChat() {
+      try {
+        await store.dispatch("chat/SendChat", messageForm)
+        chat.value = chats.value.find(
+          (chat: Chat) => chat.id===messageForm.chatId)
+        messages.value = chat.value.messages
+        messageForm.newText = ""
+      } catch(error) {
+        console.log(error.message)
+      }
     }
 // ============================================================================
 // ============================================================================
 // ============================================================================
 // ============================================================================
-// ============================================================================
-    return {goBack,user,chats,messages,setMessages}
+    return {user,chats,chat,selected,messages,messageForm,
+    goBack,setChat,sendChat,}
   }
 })
 </script>
@@ -123,9 +150,9 @@ export default defineComponent({
           overflow-y scroll
           background-color #f5f5f5
           .chatroom
-            background-color #FFD700
-            border 1px solid black
-            margin 2px
+            background-color white
+            box-shadow 1px 1px 8px 1px #999
+            margin 1px 0
             height 70px
             display flex
             justify-content center
@@ -135,6 +162,10 @@ export default defineComponent({
             transition: 0.3s ease
             &:hover
               transform: scale(0.9)
+          .selected
+            background-color yellow
+          .notSelected
+            background-color white
       .msgs
         float right
         padding 30px 15px 0 25px
@@ -143,6 +174,15 @@ export default defineComponent({
           background-color #f5f5f5
           height 516px
           overflow-y auto
+          .msg
+            border 1px solid black
+            float left
+            margin 10px
+            width 50%
+            border-radius 20px
+            padding 12px
+            position relative
+            text-align center
         .type_msg
           border-top 1px solid #c4c4c4
           position relative
@@ -165,6 +205,9 @@ export default defineComponent({
               cursor pointer
               font-size 17px
               font-weight bold
+            .disabled
+              pointer-events none
+              background-color #D3D3D3
   .buttons
     .button
       cursor pointer

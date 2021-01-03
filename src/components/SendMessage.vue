@@ -1,6 +1,8 @@
 <template lang='pug'>
 .sendmessage
-  .logged-in(v-if="user")
+  .login-page(v-if="!user")
+    LoginComponent
+  .logged-in(v-else)
     div(v-if="sent === true")
       p.alert.success 
         | Message is successfully sent.
@@ -30,8 +32,6 @@
       .buttons
         button.button(@click="sendMessage") Send
         button.button(@click="goBack") Cancel
-  .login-page(v-else)
-    LoginComponent
 </template>
 
 <script lang='ts'>
@@ -51,8 +51,8 @@ export default defineComponent({
     const sent = ref()
 // ============================================================================
     const messageForm = {
-      name: user.nickname,
-      sendFrom: user.email,
+      name: "",
+      sendFrom: "",
       sendTo: retrievedUser.value.email,
       subject: "",
       message: "",
@@ -64,7 +64,7 @@ export default defineComponent({
 // ============================================================================
     async function sendMessage() {
       try {
-        await store.dispatch('user/SendMessage', messageForm)
+        await store.dispatch('user/SendEmail', messageForm)
         sent.value = true
         console.log("message sent")
 
