@@ -70,10 +70,15 @@ export default defineComponent({
       router.go(-1)
     }
 // ============================================================================
+    function websocket(id: number) {
+      const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chatroom/"+id+'/')
+    }
+// ============================================================================
     async function setChat(c: Chat) {
       messageForm.chatId = c.id
       messages.value = c.messages
       selected.value = c.id
+      websocket(c.id)
     }
 // ============================================================================
     async function sendChat() {
@@ -92,7 +97,7 @@ export default defineComponent({
 // ============================================================================
 // ============================================================================
     return {user,chats,chat,selected,messages,messageForm,
-    goBack,setChat,sendChat,}
+    goBack,setChat,sendChat,websocket,}
   }
 })
 </script>
