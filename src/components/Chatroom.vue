@@ -81,7 +81,8 @@ export default defineComponent({
       selected.value = c.id
       messages.value = c.messages
       store.commit("chat/setChat", c)
-      store.dispatch("chat/GetWebSocket", c.id)
+      await store.dispatch("chat/GetWebSocket", c.id)
+      await router.push("/chat/"+c.id)
     }
 // ============================================================================
     async function sendChat() {
