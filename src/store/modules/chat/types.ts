@@ -5,6 +5,7 @@ import {User} from "@/store/modules/user/types"
 export interface State {
   chat: Chat | null;
   chats: Chat[];
+  channelSocket: WebSocket | null;
 }
 
 export interface Chat {

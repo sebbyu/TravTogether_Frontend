@@ -153,11 +153,6 @@ export default defineComponent({
 					height 30px
 					border none 
 					border-radius 10px
-				.forgot-password
-					font-size 13 px
-					margin-left 200px
-					span
-						cursor pointer
 				.error
 					color red
 				.login-button

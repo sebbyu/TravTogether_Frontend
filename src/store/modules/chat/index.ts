@@ -4,6 +4,7 @@ import {getters, mutations, actions} from '@/store/modules/chat/methods'
 export const state: State = {
   chat: null,
   chats: [],
+  channelSocket: null,
 }
 
 

@@ -22,7 +22,7 @@
               | {{ chat.created }}
         .msgs
           .msg_history
-            .msg(v-for="(msg, msgIndex) in messages" :key="msgIndex")
+            .msg#msg(v-for="(msg, msgIndex) in messages" :key="msgIndex")
               | {{ msg.text }}
           .type_msg
             form.input_msg_write(@submit.prevent="sendChat")
@@ -59,6 +59,7 @@ export default defineComponent({
     const chat = ref()
     const selected = ref(0)
     const messages = ref()
+    const chatSocket = store.getters['chat/getChannelSocket']
 // ============================================================================
     const messageForm = reactive({
       chatId: 0,
@@ -70,15 +71,11 @@ export default defineComponent({
       router.go(-1)
     }
 // ============================================================================
-    function websocket(id: number) {
-      const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chatroom/"+id+'/')
-    }
-// ============================================================================
     async function setChat(c: Chat) {
       messageForm.chatId = c.id
       messages.value = c.messages
       selected.value = c.id
-      websocket(c.id)
+      store.dispatch("chat/GetWebSocket", c.id)
     }
 // ============================================================================
     async function sendChat() {
@@ -97,7 +94,7 @@ export default defineComponent({
 // ============================================================================
 // ============================================================================
     return {user,chats,chat,selected,messages,messageForm,
-    goBack,setChat,sendChat,websocket,}
+    goBack,setChat,sendChat,chatSocket}
   }
 })
 </script>

@@ -4,6 +4,7 @@ import {state as userState} from '@/store/modules/user/index'
 
 const CHATSURL = "http://127.0.0.1:8000/chats/"
 const MSGSURL = "http://127.0.0.1:8000/messages/"
+const WEBSOCKETURL = "ws://127.0.0.1:8000/ws/chatroom/"
 
 
 export const getters: Getter = {
@@ -11,6 +12,7 @@ export const getters: Getter = {
 // =====================================================
   getChat: state => state.chat,
 // =====================================================
+  getChannelSocket: state => state.channelSocket,
 // =====================================================
 // =====================================================
 // =====================================================
@@ -30,7 +32,11 @@ export const mutations: Mutation = {
     state.chat = chat
   },
 // =====================================================
+  setWebSocket(state, chatId) {
+    state.channelSocket = new WebSocket(WEBSOCKETURL+chatId+'/')
+  },
 // =====================================================
+
 // =====================================================
 // =====================================================
 // =====================================================
@@ -72,10 +78,33 @@ export const actions: Action = {
     } catch(error) {
       console.log(error.message)
     }
-  }
+  },
 // =====================================================
+  GetWebSocket({dispatch, commit}, chatId) {
+    commit('setWebSocket', chatId)
+    dispatch("GetWebSocketEvents", chatId)
+  },
 // =====================================================
+  sSendChat({state}, newText) {
+    if (state.channelSocket) {
+      state.channelSocket.send(JSON.stringify({"message": newText}))
+    }
+  },
 // =====================================================
+  GetWebSocketEvents({state}, chatId) {
+    if (state.channelSocket) {
+      state.channelSocket.onopen = () => {
+        console.log(`Chatroom-${chatId} Connection Established.`)
+      }
+      state.channelSocket.onmessage = (event) => {
+        console.log(event.data)
+        
+      }
+      state.channelSocket.onerror = (event) => {
+        console.log("WebSocket Error " + event)
+      }
+    }
+  },
 // =====================================================
 // =====================================================
 // =====================================================
