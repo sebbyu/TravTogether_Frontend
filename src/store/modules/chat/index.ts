@@ -5,6 +5,7 @@ export const state: State = {
   chat: null,
   chats: [],
   channelSocket: null,
+  newText: "",
 }
 
 

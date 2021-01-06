@@ -23,7 +23,7 @@
         .msgs
           .msg_history
             .msg#msg(v-for="(msg, msgIndex) in messages" :key="msgIndex")
-              | {{ msg.text }}
+              | {{ msg }}
           .type_msg
             form.input_msg_write(@submit.prevent="sendChat")
               input.write_msg(type='text' placeholder='Type a message' 
@@ -56,7 +56,7 @@ export default defineComponent({
     const user = store.getters['user/getUser']
     store.dispatch("chat/GetChats")
     const chats = computed(() => store.getters['chat/getChats'])
-    const chat = ref()
+    const chat = computed(() => store.getters['chat/getChat'])
     const selected = ref(0)
     const messages = ref()
     const chatSocket = store.getters['chat/getChannelSocket']
@@ -64,7 +64,12 @@ export default defineComponent({
     const messageForm = reactive({
       chatId: 0,
       newText: "",
-      userNickname: "", 
+      userNickname: user.nickname, 
+    })
+// ============================================================================
+    const tempForm = reactive({
+      userNickname: user.nickname,
+      newText: messageForm.newText
     })
 // ============================================================================
     function goBack() {
@@ -73,17 +78,20 @@ export default defineComponent({
 // ============================================================================
     async function setChat(c: Chat) {
       messageForm.chatId = c.id
-      messages.value = c.messages
       selected.value = c.id
+      messages.value = c.messages
+      store.commit("chat/setChat", c)
       store.dispatch("chat/GetWebSocket", c.id)
     }
 // ============================================================================
     async function sendChat() {
       try {
         await store.dispatch("chat/SendChat", messageForm)
-        chat.value = chats.value.find(
-          (chat: Chat) => chat.id===messageForm.chatId)
-        messages.value = chat.value.messages
+        store.dispatch("chat/AddNewMessage", tempForm)
+        // await store.dispatch("chat/sSendChat", messageForm)
+        // chat.value = chats.value.find(
+        //   (chat: Chat) => chat.id===messageForm.chatId)
+        // messages.value = chat.value.messages
         messageForm.newText = ""
       } catch(error) {
         console.log(error.message)

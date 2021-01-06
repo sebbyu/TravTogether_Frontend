@@ -6,6 +6,7 @@ export interface State {
   chat: Chat | null;
   chats: Chat[];
   channelSocket: WebSocket | null;
+  newText: string;
 }
 
 export interface Chat {
@@ -13,7 +14,13 @@ export interface Chat {
   title: string;
   created: string;
   users: User[];
-  messages: string[];
+  messages: Message[];
+}
+
+export interface Message {
+  user: string;
+  text: string;
+  created: string;
 }
 
 export type Getter = GetterTree<State, RootState>

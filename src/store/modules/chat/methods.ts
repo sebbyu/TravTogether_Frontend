@@ -1,6 +1,7 @@
 import {Getter, Mutation, Action} from '@/store/modules/chat/types'
 import axios from 'axios'
-import {state as userState} from '@/store/modules/user/index'
+import {Message} from '@/store/modules/chat/types'
+
 
 const CHATSURL = "http://127.0.0.1:8000/chats/"
 const MSGSURL = "http://127.0.0.1:8000/messages/"
@@ -14,6 +15,7 @@ export const getters: Getter = {
 // =====================================================
   getChannelSocket: state => state.channelSocket,
 // =====================================================
+  getNewText: state => state.newText,
 // =====================================================
 // =====================================================
 // =====================================================
@@ -32,11 +34,14 @@ export const mutations: Mutation = {
     state.chat = chat
   },
 // =====================================================
+  setNewText(state, newText) {
+    state.newText = newText
+  },
+// =====================================================
   setWebSocket(state, chatId) {
     state.channelSocket = new WebSocket(WEBSOCKETURL+chatId+'/')
   },
 // =====================================================
-
 // =====================================================
 // =====================================================
 // =====================================================
@@ -65,13 +70,11 @@ export const actions: Action = {
     }
   },
 // =====================================================
-  async SendChat({dispatch}, form) {
+  async sSendChat({dispatch}, form) {
     const msgForm = new FormData()
     msgForm.append("chatId", form.chatId)
     msgForm.append("newText", form.newText)
-    if (userState.user) {
-      msgForm.append("userNickname", userState.user.nickname)
-    }
+    msgForm.append("userNickname", form.userNickname)
     try {
       await axios.post(MSGSURL, msgForm)
       await dispatch("GetChats")
@@ -85,26 +88,45 @@ export const actions: Action = {
     dispatch("GetWebSocketEvents", chatId)
   },
 // =====================================================
-  sSendChat({state}, newText) {
-    if (state.channelSocket) {
-      state.channelSocket.send(JSON.stringify({"message": newText}))
-    }
-  },
-// =====================================================
-  GetWebSocketEvents({state}, chatId) {
+  GetWebSocketEvents({commit, state}, chatId) {
     if (state.channelSocket) {
       state.channelSocket.onopen = () => {
         console.log(`Chatroom-${chatId} Connection Established.`)
       }
       state.channelSocket.onmessage = (event) => {
-        console.log(event.data)
-        
+        commit("setNewText", JSON.parse(event.data)['newText'])
+        // if (state.chat) {
+        //   const newMessage = {
+        //     user: "Chan Shu You",
+        //     text: state.newText,
+        //     created: new Date().toString()
+        //   } as Message
+        //   state.chat.messages.push(newMessage)
+        // }
       }
       state.channelSocket.onerror = (event) => {
         console.log("WebSocket Error " + event)
+      },
+      state.channelSocket.onclose = () => {
+        console.error('Chat socket closed unexpectedly')
       }
     }
   },
+// =====================================================
+  SendChat({state}, form) {
+    state.channelSocket?.send(JSON.stringify({'userNickname': form.userNickname,
+    'newText': form.newText}))
+  },
+// =====================================================
+  AddNewMessage({state}, form) {
+    const newMessage = {
+      user: form.userNickname,
+      text: form.newText,
+      created: new Date().toString()
+    } as Message
+    state.chat?.messages.push(newMessage)
+  }
+// =====================================================
 // =====================================================
 // =====================================================
 // =====================================================
