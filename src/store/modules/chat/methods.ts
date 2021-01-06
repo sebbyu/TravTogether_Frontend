@@ -87,13 +87,20 @@ export const actions: Action = {
     dispatch("GetWebSocketEvents", chatId)
   },
 // =====================================================
-  GetWebSocketEvents({commit, state}, chatId) {
+  GetWebSocketEvents({commit, dispatch, state}, chatId) {
     if (state.channelSocket) {
       state.channelSocket.onopen = () => {
         console.log(`Chatroom-${chatId} Connection Established.`)
       }
       state.channelSocket.onmessage = (event) => {
+        const parsed = JSON.parse(event.data)
         commit("setNewText", JSON.parse(event.data)['newText'])
+        const newMessage = {
+          user: parsed['userNickname'],
+          text: parsed['newText'],
+          created: new Date().toString()
+        } as Message
+        dispatch("AddNewMessage", newMessage)
       }
       state.channelSocket.onerror = (event) => {
         console.log("WebSocket Error " + event)
@@ -109,12 +116,7 @@ export const actions: Action = {
     'newText': form.newText}))
   },
 // =====================================================
-  AddNewMessage({state}, form) {
-    const newMessage = {
-      user: form.userNickname,
-      text: form.newText,
-      created: new Date().toString()
-    } as Message
+  AddNewMessage({state}, newMessage) {
     state.chat?.messages.push(newMessage)
   }
 // =====================================================

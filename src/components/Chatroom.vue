@@ -87,7 +87,6 @@ export default defineComponent({
     async function sendChat() {
       try {
         await store.dispatch("chat/SendChat", messageForm)
-        store.dispatch("chat/AddNewMessage", tempForm)
         // await store.dispatch("chat/sSendChat", messageForm)
         // chat.value = chats.value.find(
         //   (chat: Chat) => chat.id===messageForm.chatId)
