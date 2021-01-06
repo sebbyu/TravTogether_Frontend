@@ -2,7 +2,6 @@ import {Getter, Mutation, Action} from '@/store/modules/chat/types'
 import axios from 'axios'
 import {Message} from '@/store/modules/chat/types'
 
-
 const CHATSURL = "http://127.0.0.1:8000/chats/"
 const MSGSURL = "http://127.0.0.1:8000/messages/"
 const WEBSOCKETURL = "ws://127.0.0.1:8000/ws/chatroom/"
@@ -95,14 +94,6 @@ export const actions: Action = {
       }
       state.channelSocket.onmessage = (event) => {
         commit("setNewText", JSON.parse(event.data)['newText'])
-        // if (state.chat) {
-        //   const newMessage = {
-        //     user: "Chan Shu You",
-        //     text: state.newText,
-        //     created: new Date().toString()
-        //   } as Message
-        //   state.chat.messages.push(newMessage)
-        // }
       }
       state.channelSocket.onerror = (event) => {
         console.log("WebSocket Error " + event)
