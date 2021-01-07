@@ -21,7 +21,7 @@
               br
               | {{ chat.created }}
         .msgs
-          .msg_history
+          .msg_history#msg_history
             .msg#msg(v-for="(msg, msgIndex) in messages" :key="msgIndex")
               | {{ msg }}
           .type_msg
@@ -67,13 +67,17 @@ export default defineComponent({
       userNickname: user.nickname, 
     })
 // ============================================================================
-    const tempForm = reactive({
-      userNickname: user.nickname,
-      newText: messageForm.newText
-    })
-// ============================================================================
     function goBack() {
       router.go(-1)
+    }
+// ============================================================================
+    function scrollDown() {
+      const element = document.getElementById("msg_history")
+      if (element) {
+        setTimeout(function() {
+          element.scrollTop = element.scrollHeight},
+          100)
+      }
     }
 // ============================================================================
     async function setChat(c: Chat) {
@@ -83,18 +87,27 @@ export default defineComponent({
       store.commit("chat/setChat", c)
       await store.dispatch("chat/GetWebSocket", c.id)
       await router.push("/chat/"+c.id)
+      scrollDown()
     }
 // ============================================================================
-    async function sendChat() {
-      try {
-        await store.dispatch("chat/SendChat", messageForm)
-        // await store.dispatch("chat/sSendChat", messageForm)
-        // chat.value = chats.value.find(
-        //   (chat: Chat) => chat.id===messageForm.chatId)
-        // messages.value = chat.value.messages
-        messageForm.newText = ""
-      } catch(error) {
-        console.log(error.message)
+    function sendChat() {
+      if (messageForm.newText != "") {
+        try {
+          store.dispatch("chat/SendChat", messageForm)
+          // await store.dispatch("chat/sSendChat", messageForm)
+          // await store.dispatch("chat/sSendChat", messageForm)
+          // chat.value = chats.value.find(
+          //   (chat: Chat) => chat.id===messageForm.chatId)
+          // messages.value = chat.value.messages
+          messageForm.newText = ""
+          // await setInterval(() => {
+          //   scrollDown(),
+          //   5000
+          // })
+          scrollDown()
+        } catch(error) {
+          console.log(error.message)
+        }
       }
     }
 // ============================================================================
@@ -102,7 +115,7 @@ export default defineComponent({
 // ============================================================================
 // ============================================================================
     return {user,chats,chat,selected,messages,messageForm,
-    goBack,setChat,sendChat,chatSocket}
+    goBack,setChat,sendChat,chatSocket,scrollDown}
   }
 })
 </script>

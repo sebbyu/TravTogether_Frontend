@@ -1,6 +1,7 @@
 import {Getter, Mutation, Action} from '@/store/modules/chat/types'
 import axios from 'axios'
 import {Message} from '@/store/modules/chat/types'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
 const CHATSURL = "http://127.0.0.1:8000/chats/"
 const MSGSURL = "http://127.0.0.1:8000/messages/"
@@ -38,7 +39,7 @@ export const mutations: Mutation = {
   },
 // =====================================================
   setWebSocket(state, chatId) {
-    state.channelSocket = new WebSocket(WEBSOCKETURL+chatId+'/')
+    state.channelSocket = new ReconnectingWebSocket(WEBSOCKETURL+chatId+'/')
   },
 // =====================================================
 // =====================================================
@@ -98,7 +99,7 @@ export const actions: Action = {
         const newMessage = {
           user: parsed['userNickname'],
           text: parsed['newText'],
-          created: new Date().toString()
+          created: new Date(parsed['created']).toLocaleString()
         } as Message
         dispatch("AddNewMessage", newMessage)
       }

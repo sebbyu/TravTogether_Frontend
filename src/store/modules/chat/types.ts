@@ -1,11 +1,12 @@
 import {GetterTree, MutationTree, ActionTree, Module as BaseModule} from 'vuex'
 import {RootState} from '@/store/types'
 import {User} from "@/store/modules/user/types"
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 export interface State {
   chat: Chat | null;
   chats: Chat[];
-  channelSocket: WebSocket | null;
+  channelSocket: ReconnectingWebSocket | null;
   newText: string;
 }
 
