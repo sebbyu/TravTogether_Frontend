@@ -22,8 +22,14 @@
               | {{ chat.created }}
         .msgs
           .msg_history#msg_history
-            .msg#msg(v-for="(msg, msgIndex) in messages" :key="msgIndex")
-              | {{ msg }}
+            .msg#msg(v-for="(msg, msgIndex) in messages" :key="msgIndex"
+            :class="{'me': msg.user == user.nickname}")
+              .element
+                .text
+                  | {{ msg.text }}
+                .user(style="float:right")
+                  | {{ msg.created}}
+
           .type_msg
             form.input_msg_write(@submit.prevent="sendChat")
               input.write_msg(type='text' placeholder='Type a message' 
@@ -60,6 +66,7 @@ export default defineComponent({
     const selected = ref(0)
     const messages = ref()
     const chatSocket = store.getters['chat/getChannelSocket']
+    let me = ""
 // ============================================================================
     const messageForm = reactive({
       chatId: 0,
@@ -81,6 +88,7 @@ export default defineComponent({
     }
 // ============================================================================
     async function setChat(c: Chat) {
+      
       messageForm.chatId = c.id
       selected.value = c.id
       messages.value = c.messages
@@ -93,6 +101,8 @@ export default defineComponent({
     function sendChat() {
       if (messageForm.newText != "") {
         try {
+          me = user.nickname
+          console.log()
           store.dispatch("chat/SendChat", messageForm)
           // await store.dispatch("chat/sSendChat", messageForm)
           // await store.dispatch("chat/sSendChat", messageForm)
@@ -105,6 +115,7 @@ export default defineComponent({
           //   5000
           // })
           scrollDown()
+          me = ""
         } catch(error) {
           console.log(error.message)
         }
@@ -115,7 +126,7 @@ export default defineComponent({
 // ============================================================================
 // ============================================================================
     return {user,chats,chat,selected,messages,messageForm,
-    goBack,setChat,sendChat,chatSocket,scrollDown}
+    goBack,setChat,sendChat,chatSocket,scrollDown,me}
   }
 })
 </script>
@@ -198,14 +209,16 @@ export default defineComponent({
           height 516px
           overflow-y auto
           .msg
+            display flex
+            word-break break-all
             border 1px solid black
-            float left
             margin 10px
             width 50%
             border-radius 20px
             padding 12px
-            position relative
-            text-align center
+            justify-content center
+          .me
+            float right
         .type_msg
           border-top 1px solid #c4c4c4
           position relative
