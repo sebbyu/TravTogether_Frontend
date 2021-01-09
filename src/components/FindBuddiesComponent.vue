@@ -5,19 +5,20 @@
 		.categories
 			.filters(v-for="(filter, index) in filters" :key="index")
 				.filter
-					button(:class="{selected: filter.filterBool}"
-					@click="filter.filterBool = !filter.filterBool") {{ filter.filter }}
+					button(:class="{'selected': filter === selectedFilter, 'notSelected': filter !== selectedFilter}"
+					@click="selectFilter(filter)") {{ filter }}
 		.search
 			input#search-box(type='search' 
 						name='search-box'
-						placeholder='Search (Country, City, Name, Gender)'
+						placeholder="Search By 'Country', 'City', or 'Name'"
 						v-model="search"
-						:disabled="!isAuthenticated")
-			img(src='@/assets/search-logo.png' alt='search-logo')
+						:disabled="!isAuthenticated"
+						@keyup.enter="filterUser")
+			img(src='@/assets/search-logo.png' alt='search-logo' @click="filterUser")
 	.mid-sec
 		.logged-in
 			.results(
-				v-for="(user, index) in userList" :key="index")
+				v-for="(user, index) in filteredList" :key="index")
 				.user
 					.profile-picture(style="border:1px solid grey;"
 					@click="userDetail(user)")
@@ -50,7 +51,7 @@
 
 
 <script lang='ts'>
-import {defineComponent, ref, computed, reactive} from 'vue'
+import {defineComponent, ref, computed} from 'vue'
 import {useStore} from 'vuex'
 import LoginComponent from '@/components/LoginComponent.vue'
 import router from '@/router'
@@ -64,43 +65,53 @@ export default defineComponent({
 	setup() {
 		const store = useStore()
 		store.dispatch("user/GetAllUsers")
-		const search = ""
+		const search = ref("")
 		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
 		const currentUser = computed(() => store.getters['user/getUser'])
-		const userList = computed(() => store.getters['user/getAllUsers'])
+		// let userList = computed(() => store.getters['user/getAllUsers'])
+		// let userList = store.getters['user/getAllUsers']
+		const userList = store.getters['user/getAllUsers']
+		const filteredList = ref([])
 		const googleUser = computed(() => firebase.auth().currentUser)
+		const selectedFilter = ref("All")
 // ============================================================================
-		interface Filter {
-			filter: string;
-			filterBool: boolean;
-		}
+		const filters = ["All", "Country", "City", "Nickname"]
 // ============================================================================
-		const filters = [
-			reactive({
-				filter: "Country",
-				filterBool: ref(false),
-			}) as Filter,
-			reactive({
-				filter: "City",
-				filterBool: ref(false),
-			}) as Filter,
-			reactive({
-				filter: "Name",
-				filterBool: ref(false),
-			}) as Filter,
-			reactive({
-				filter: "Gender",
-				filterBool: ref(false),
-			}) as Filter,
-		]
-// ============================================================================
+		// if (selectedFilter.value == "Country" || selectedFilter.value == "City") {
+		// 	filteredList.value = userList.value.filter((user: User) =>  user.location.includes(search.value))
+		// } else if (selectedFilter.value == "Nickname") {
+		// 	filteredList.value = userList.value.filter((user: User) => user.nickname.includes(search.value))
+		// }
 		async function userDetail(user: User) {
 			await store.dispatch('user/RetrieveUser', user.slug)
 			await router.push('/user/'+user.slug)
 		}
 // ============================================================================
+		function filterUser() {
+			if (selectedFilter.value == "Country" || selectedFilter.value == "City") {
+				filteredList.value = userList.filter((user: User) =>  user.location.toLowerCase().includes(search.value.toLowerCase()))
+			} else if (selectedFilter.value === "Nickname") {
+				filteredList.value = userList.filter((user: User) => user.nickname.toLowerCase().includes(search.value.toLowerCase()))
+			}
+		}
+// ============================================================================
+		function selectFilter(filter: string) {
+			selectedFilter.value = filter
+			if (filter == "All") {
+				filteredList.value = store.getters['user/getAllUsers']
+			}
+			else {
+				filteredList.value = []
+			}
+			search.value = ""
+			document.getElementById("search-box")?.focus()
+		}
+// ============================================================================
+// ============================================================================
+// ============================================================================
+// ============================================================================
 		return {search,filters,userList,currentUser,isAuthenticated,userDetail,
-		googleUser,}
+		googleUser,selectedFilter,selectFilter,filteredList,filterUser}
 	}
 })
 </script>
@@ -147,6 +158,7 @@ export default defineComponent({
 				border-bottom 1px solid rgb(92,94,95)
 				width 800px
 				font-size 17px
+				outline none
 			img
 				height 30px
 				padding-left 10px
