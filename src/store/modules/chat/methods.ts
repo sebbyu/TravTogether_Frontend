@@ -102,6 +102,12 @@ export const actions: Action = {
           created: new Date(parsed['created']).toLocaleString()
         } as Message
         dispatch("AddNewMessage", newMessage)
+        const element = document.getElementById("msg_history")
+        if (element) {
+          setTimeout(function() {
+            element.scrollTop = element.scrollHeight},
+            100)
+        }
       }
       state.channelSocket.onerror = (event) => {
         console.log("WebSocket Error " + event)

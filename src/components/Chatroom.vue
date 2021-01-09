@@ -19,17 +19,14 @@
             :class="{'selected': selected === chat.id, 'notSelected': selected !== chat.id}")
               | {{ chat.title }}
               br
-              | {{ chat.created }}
+              | {{ chat.created.split('T')[0] }}
         .msgs
           .msg_history#msg_history
             .msg#msg(v-for="(msg, msgIndex) in messages" :key="msgIndex"
             :class="{'me': msg.user == user.nickname}")
               .element
-                .text
-                  | {{ msg.text }}
-                .user(style="float:right")
-                  | {{ msg.created}}
-
+                .text {{ msg.text }}
+                .created {{ msg.created.split('T')[0] }}
           .type_msg
             form.input_msg_write(@submit.prevent="sendChat")
               input.write_msg(type='text' placeholder='Type a message' 
@@ -114,7 +111,6 @@ export default defineComponent({
           //   scrollDown(),
           //   5000
           // })
-          scrollDown()
           me = ""
         } catch(error) {
           console.log(error.message)
@@ -217,6 +213,10 @@ export default defineComponent({
             border-radius 20px
             padding 12px
             justify-content center
+            .element
+              justify-content center
+              .text
+                font-weight bold
           .me
             float right
         .type_msg
