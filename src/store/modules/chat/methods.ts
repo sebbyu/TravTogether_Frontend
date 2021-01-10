@@ -82,6 +82,30 @@ export const actions: Action = {
       console.log(error.message)
     }
   },
+  async CreateChat({dispatch}, form) {
+    const newForm = new FormData()
+    newForm.append("title", form.title)
+    newForm.append("user", form.user)
+    try {
+      await axios.post(CHATSURL, newForm)
+      await dispatch("GetChats")
+    } catch(error) {
+      console.log(error.message)
+    }
+  },
+  async AddUserToChat({dispatch}, userForm) {
+    const form = new FormData()
+    form.append("chatId", userForm.chatId)
+    form.append("user", userForm.userNickname)
+    try {
+      await axios.put(CHATSURL+userForm.chatId+'/', form)
+      await dispatch("GetChat", userForm.chatId)
+      console.log("User added")
+    } catch(error) {
+      console.log(error.messages)
+    }
+    
+  },
 // =====================================================
   GetWebSocket({dispatch, commit}, chatId) {
     commit('setWebSocket', chatId)
@@ -118,14 +142,15 @@ export const actions: Action = {
     }
   },
 // =====================================================
-  SendChat({state}, form) {
+  SendChat({dispatch, state}, form) {
     state.channelSocket?.send(JSON.stringify({'userNickname': form.userNickname,
     'newText': form.newText}))
+    dispatch("sSendChat", form)
   },
 // =====================================================
   AddNewMessage({state}, newMessage) {
     state.chat?.messages.push(newMessage)
-  }
+  },
 // =====================================================
 // =====================================================
 // =====================================================

@@ -20,7 +20,13 @@
               | {{ chat.title }}
               br
               | {{ chat.created.split('T')[0] }}
+              br
         .msgs
+          .users#users(v-if="chat")
+            .totalNum
+              | Users - ({{ chat.users.length }})
+            .user(v-for="(user, idx) in chat.users")
+              | {{ user }}, 
           .msg_history#msg_history
             .msg#msg(v-for="(msg, msgIndex) in messages" :key="msgIndex"
             :class="{'me': msg.user == user.nickname}")
@@ -35,8 +41,14 @@
               button.msg_send_btn(type="submit"
               :class="{'disabled': selected === 0, 'active': selected !== 0}") Enter
     .buttons
-      button.button(@click="invite") Invite +
-      button.button(@click="goBack") Exit
+      button.button(@click="creatingChat = !creatingChat") Create Chat +
+      .createChat(v-if="creatingChat")
+        form.form(@submit.prevent="createChat")
+          input.input(type="text" placeholder="title..." v-model="newChatForm.title")
+          button.button(@click='createChat') create
+          button.button(@click="creatingChat = false") cancel
+      button.button(v-if="creatingChat == false && chat" @click="invite") Invite +
+      button.button(v-if="creatingChat == false" @click="goBack") Exit
   .logged-out(v-else)
     LoginComponent
 </template>
@@ -58,18 +70,23 @@ export default defineComponent({
     const store = useStore()
     const user = store.getters['user/getUser']
     store.dispatch("chat/GetChats")
-    const chats = computed(() => store.getters['chat/getChats'])
-    const chat = computed(() => store.getters['chat/getChat'])
+    const allChats = computed(() => store.getters['chat/getChats'])
+    const chats = ref(allChats.value.filter((chat: Chat) => chat.users.includes(user.nickname)))
+    const chat = ref()
     const selected = ref(0)
     const messages = ref()
     const chatSocket = store.getters['chat/getChannelSocket']
-    let me = ""
+    const creatingChat = ref(false)
 // ============================================================================
     const messageForm = reactive({
       chatId: 0,
       newText: "",
       userNickname: user.nickname, 
     })
+    const newChatForm = {
+      title: "",
+      user: user.nickname,
+     }
 // ============================================================================
     function goBack() {
       router.go(-1)
@@ -85,44 +102,46 @@ export default defineComponent({
     }
 // ============================================================================
     async function setChat(c: Chat) {
-      
       messageForm.chatId = c.id
       selected.value = c.id
       messages.value = c.messages
-      store.commit("chat/setChat", c)
-      await store.dispatch("chat/GetWebSocket", c.id)
-      await router.push("/chat/"+c.id)
+      store.dispatch("chat/GetWebSocket", c.id)
+      store.commit('chat/setChat', c)
+      router.push("/chat/"+c.id)
+      
       scrollDown()
     }
 // ============================================================================
     function sendChat() {
       if (messageForm.newText != "") {
         try {
-          me = user.nickname
-          console.log()
           store.dispatch("chat/SendChat", messageForm)
-          // await store.dispatch("chat/sSendChat", messageForm)
-          // await store.dispatch("chat/sSendChat", messageForm)
-          // chat.value = chats.value.find(
-          //   (chat: Chat) => chat.id===messageForm.chatId)
-          // messages.value = chat.value.messages
           messageForm.newText = ""
-          // await setInterval(() => {
-          //   scrollDown(),
-          //   5000
-          // })
-          me = ""
         } catch(error) {
           console.log(error.message)
         }
       }
     }
 // ============================================================================
+    async function createChat() {
+      creatingChat.value = true
+      try {
+        await store.dispatch("chat/CreateChat", newChatForm)
+        creatingChat.value = false
+        chats.value = allChats.value.filter((chat: Chat) => chat.users.includes(user.nickname))
+      } catch(error) {
+        console.log(error.message)
+      }
+    }
+// ============================================================================
+    async function invite() {
+      router.push('/users/')
+    }
 // ============================================================================
 // ============================================================================
-// ============================================================================
-    return {user,chats,chat,selected,messages,messageForm,
-    goBack,setChat,sendChat,chatSocket,scrollDown,me}
+    return {user,allChats,chats,chat,selected,messages,messageForm,
+    goBack,setChat,sendChat,chatSocket,scrollDown,createChat,creatingChat,
+    newChatForm,invite}
   }
 })
 </script>
@@ -200,6 +219,15 @@ export default defineComponent({
         float right
         padding 30px 15px 0 25px
         width 60%
+        .users
+          font-weight bold
+          font-size 15px
+          .totalNum
+            display flex
+          .user
+            display inline
+            padding-right 2em
+            word-break break-all
         .msg_history
           background-color #f5f5f5
           height 516px
@@ -245,6 +273,10 @@ export default defineComponent({
               pointer-events none
               background-color #D3D3D3
   .buttons
+    .createChat
+      .form
+        .input
+          background-color white
     .button
       cursor pointer
       font-size 17px

@@ -68,20 +68,12 @@ export default defineComponent({
 		const search = ref("")
 		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
 		const currentUser = computed(() => store.getters['user/getUser'])
-		// let userList = computed(() => store.getters['user/getAllUsers'])
-		// let userList = store.getters['user/getAllUsers']
 		const userList = store.getters['user/getAllUsers']
-		const filteredList = ref([])
+		const filteredList = ref(store.getters['user/getAllUsers'])
 		const googleUser = computed(() => firebase.auth().currentUser)
 		const selectedFilter = ref("All")
-// ============================================================================
 		const filters = ["All", "Country", "City", "Nickname"]
 // ============================================================================
-		// if (selectedFilter.value == "Country" || selectedFilter.value == "City") {
-		// 	filteredList.value = userList.value.filter((user: User) =>  user.location.includes(search.value))
-		// } else if (selectedFilter.value == "Nickname") {
-		// 	filteredList.value = userList.value.filter((user: User) => user.nickname.includes(search.value))
-		// }
 		async function userDetail(user: User) {
 			await store.dispatch('user/RetrieveUser', user.slug)
 			await router.push('/user/'+user.slug)
@@ -110,8 +102,8 @@ export default defineComponent({
 // ============================================================================
 // ============================================================================
 // ============================================================================
-		return {search,filters,userList,currentUser,isAuthenticated,userDetail,
-		googleUser,selectedFilter,selectFilter,filteredList,filterUser}
+		return {search,isAuthenticated,currentUser,userList,filteredList,googleUser,selectedFilter,filters,
+		userDetail,filterUser,selectFilter,}
 	}
 })
 </script>
