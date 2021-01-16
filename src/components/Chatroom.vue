@@ -45,7 +45,7 @@
       .createChat(v-if="creatingChat")
         form.form(@submit.prevent="createChat")
           input.input(type="text" placeholder="title..." v-model="newChatForm.title")
-          button.button(@click='createChat') create
+          button.button(type="submit") create
           button.button(@click="creatingChat = false") cancel
       button.button(v-if="creatingChat == false && chat" @click="invite") Invite +
       button.button(v-if="creatingChat == false" @click="goBack") Exit
@@ -81,11 +81,11 @@ export default defineComponent({
     const messageForm = reactive({
       chatId: 0,
       newText: "",
-      userNickname: user.nickname, 
+      userNickname: "", 
     })
     const newChatForm = {
       title: "",
-      user: user.nickname,
+      user: "",
      }
 // ============================================================================
     function goBack() {
@@ -102,6 +102,7 @@ export default defineComponent({
     }
 // ============================================================================
     async function setChat(c: Chat) {
+      chat.value = c
       messageForm.chatId = c.id
       selected.value = c.id
       messages.value = c.messages
@@ -114,6 +115,7 @@ export default defineComponent({
 // ============================================================================
     function sendChat() {
       if (messageForm.newText != "") {
+        messageForm.userNickname = user.nickname
         try {
           store.dispatch("chat/SendChat", messageForm)
           messageForm.newText = ""
@@ -124,13 +126,15 @@ export default defineComponent({
     }
 // ============================================================================
     async function createChat() {
-      creatingChat.value = true
-      try {
-        await store.dispatch("chat/CreateChat", newChatForm)
-        creatingChat.value = false
-        chats.value = allChats.value.filter((chat: Chat) => chat.users.includes(user.nickname))
-      } catch(error) {
-        console.log(error.message)
+      if (newChatForm.title != "") {
+        newChatForm.user = user.nickname
+        try {
+          await store.dispatch("chat/CreateChat", newChatForm)
+          creatingChat.value = false
+          chats.value = allChats.value.filter((chat: Chat) => chat.users.includes(user.nickname))
+        } catch(error) {
+          console.log(error.message)
+        }
       }
     }
 // ============================================================================

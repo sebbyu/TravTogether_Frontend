@@ -71,7 +71,7 @@ export default defineComponent({
 		const userList = store.getters['user/getAllUsers']
 		const filteredList = ref(store.getters['user/getAllUsers'])
 		const googleUser = computed(() => firebase.auth().currentUser)
-		const selectedFilter = ref("All")
+		const selectedFilter = ref()
 		const filters = ["All", "Country", "City", "Nickname"]
 // ============================================================================
 		async function userDetail(user: User) {

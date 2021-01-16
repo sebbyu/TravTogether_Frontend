@@ -1,7 +1,8 @@
 import {Getter, Mutation, Action} from '@/store/modules/qanda/types'
 import axios from 'axios'
-
-const QANDASURL = "http://127.0.0.1:8000/questions/"
+import {BASEURL} from '@/store/types'
+// const QANDASURL = "http://127.0.0.1:8000/questions/"
+const QANDASURL = BASEURL + "/questions/"
 
 export const getters: Getter = {
   getQAs: state => state.QAs,

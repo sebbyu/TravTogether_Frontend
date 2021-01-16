@@ -33,7 +33,7 @@
         button(@click="updating = !updating") Change Info
         button(@click="goBack") Go Back
       div(v-else)
-        router-link(to="/chat") Chat
+        button(@click="gotoChat") Chat
         router-link(to="/message") Send Message
         button(@click="goBack") Go Back
   .update-info(v-else)
@@ -114,6 +114,7 @@ import { parse } from "papaparse"
 import router from '@/router'
 import {HTMLInputEvent, ImageForm} from '@/store/modules/user/types'
 import firebase from 'firebase/app'
+import {WORLDCITIES} from '@/store/types'
 export default defineComponent({
   name: "UserDetail",
   setup() {
@@ -173,7 +174,7 @@ export default defineComponent({
       }
     }
 // ============================================================================
-    parse("http://127.0.0.1:8000/media/locations/world-cities.csv", {
+    parse(WORLDCITIES, {
       header: true,
       download: true,
       skipEmptyLines: true,
@@ -184,12 +185,18 @@ export default defineComponent({
     })
 // ============================================================================
     function goBack() {
-      router.go(-1)
+      router.replace("/chat")
+    }
+// ============================================================================
+    function gotoChat() {
+      router.push({name: "Chat"}).then(() => {
+        window.location.reload()
+      })
     }
 // ============================================================================
     return {user,isAuthenticated,updating,updateProfile,userForm,
     locations,retrievedUser,fileInput,changeImage,clickImage,goBack,
-    googleUser,}
+    googleUser,gotoChat}
   }
 })
 </script>

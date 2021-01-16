@@ -11,7 +11,7 @@
 					|  | 
 					router-link(to='/about') About
 					|  | 
-					router-link(to='/findbuddies') Find Buddies
+					button(@click="gotoFindBuddies") Find Buddies
 					|  | 
 					router-link(to='/help') Help
 					|  | 
@@ -55,7 +55,13 @@ export default defineComponent({
 			await router.push('/user/'+user.value.slug)
 		}
 // ============================================================================
-		return {isAuthenticated,user,logout,account}
+		function gotoFindBuddies() {
+			router.push("/findbuddies").then(() => {
+				window.location.reload()
+			})
+		}
+// ============================================================================
+		return {isAuthenticated,user,logout,account,gotoFindBuddies}
 	}
 })
 </script>
@@ -77,7 +83,9 @@ export default defineComponent({
 			nav
 				min-width  700px
 				.nav_ul
-					a
+					a, button
+						border none
+						cursor pointer
 						color: #2c3e50
 						font-weight bold
 						padding 0 30px

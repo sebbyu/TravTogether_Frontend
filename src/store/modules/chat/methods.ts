@@ -2,10 +2,16 @@ import {Getter, Mutation, Action} from '@/store/modules/chat/types'
 import axios from 'axios'
 import {Message} from '@/store/modules/chat/types'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import {BASEURL,BASEHOST} from '@/store/types'
 
-const CHATSURL = "http://127.0.0.1:8000/chats/"
-const MSGSURL = "http://127.0.0.1:8000/messages/"
-const WEBSOCKETURL = "ws://127.0.0.1:8000/ws/chatroom/"
+
+// const CHATSURL = "http://127.0.0.1:8000/chats/"
+// const MSGSURL = "http://127.0.0.1:8000/messages/"
+const WEBSOCKETURL = "ws://" + BASEHOST + "/ws/chatroom/"
+
+const CHATSURL = BASEURL + "/chats/"
+const MSGSURL = BASEURL + "/messages/"
+// const WEBSOCKETURL = "ws://travtogether.herokuapp.com/ws/chatroom/"
 
 
 export const getters: Getter = {

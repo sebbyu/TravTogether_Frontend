@@ -75,6 +75,7 @@ import { parse } from "papaparse"
 import {useStore} from 'vuex'
 import router from '@/router'
 import {RegistrationForm, HTMLInputEvent} from '@/store/modules/user/types'
+import {WORLDCITIES} from '@/store/types'
 export default defineComponent({
   name: "RegistrationComponent",
   setup() {
@@ -103,7 +104,7 @@ export default defineComponent({
       }
     }
 // ============================================================================
-    parse("http://127.0.0.1:8000/media/locations/world-cities.csv", {
+    parse(WORLDCITIES, {
       header: true,
       download: true,
       skipEmptyLines: true,

@@ -1,10 +1,15 @@
 import {Getter, Mutation, Action} from '@/store/modules/user/types'
 import axios from 'axios'
 import slugify from 'slugify'
+import {BASEURL} from '@/store/types'
 
-const LOCALHOST = "http://127.0.0.1:8000/"
-const USERSURL = "http://127.0.0.1:8000/users/"
-const AUTHENTICATIONURL = "http://127.0.0.1:8000/authentication/"
+// const LOCALHOST = "http://127.0.0.1:8000/"
+// const USERSURL = "http://127.0.0.1:8000/users/"
+// const AUTHENTICATIONURL = "http://127.0.0.1:8000/authentication/"
+
+const LOCALHOST = BASEURL
+const USERSURL = BASEURL + "/users/"
+const AUTHENTICATIONURL = BASEURL + "/authentication/"
 
 
 
