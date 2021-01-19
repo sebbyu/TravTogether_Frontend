@@ -7,7 +7,7 @@ import {BASEURL,BASEHOST} from '@/store/types'
 
 // const CHATSURL = "http://127.0.0.1:8000/chats/"
 // const MSGSURL = "http://127.0.0.1:8000/messages/"
-const WEBSOCKETURL = "ws://" + BASEHOST + "/ws/chatroom/"
+const WEBSOCKETURL = "wss://" + BASEHOST + "/ws/chatroom/"
 
 const CHATSURL = BASEURL + "/chats/"
 const MSGSURL = BASEURL + "/messages/"
