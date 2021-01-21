@@ -44,7 +44,7 @@ import {useStore} from 'vuex'
 import {User} from '@/store/modules/user/types'
 import router from '@/router'
 export default defineComponent({
-  name: "userProfileBox",
+  name: "UserProfileBox",
   setup() {
     const store = useStore()
     const chat = computed(() => store.getters['chat/getChat'])

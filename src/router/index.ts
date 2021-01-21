@@ -8,7 +8,7 @@ import Registration from '@/views/Registration.vue'
 import User from '@/views/User.vue'
 import Chat from '@/views/Chat.vue'
 import Message from '@/views/Message.vue'
-import userList from '@/views/userList.vue'
+import UserList from '@/views/UserList.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -67,7 +67,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/users/',
     name: 'Users',
-    component: userList
+    component: UserList
   },
 ]
 

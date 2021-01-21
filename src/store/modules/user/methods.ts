@@ -198,7 +198,7 @@ export const actions: Action = {
     messageForm.append("subject", contactForm.subject)
     messageForm.append("message", contactForm.message)
     try {
-      await axios.post(LOCALHOST+"sendmessage/", messageForm)
+      await axios.post(LOCALHOST+"/sendmessage/", messageForm)
       commit('setErrorMessage', "")
     } catch (error) {
       console.log(error.message + " ERROR SENDING MESSAGE")
@@ -216,7 +216,7 @@ export const actions: Action = {
     messageForm.append("subject", Form.subject)
     messageForm.append("message", Form.message)
     try {
-      await axios.post(LOCALHOST+"sendemail/", messageForm)
+      await axios.post(LOCALHOST+"/sendemail/", messageForm)
       commit('setErrorMessage', "")
     } catch (error) {
       console.log(error.message + " ERROR SENDING MESSAGE")

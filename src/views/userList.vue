@@ -1,15 +1,15 @@
 <template lang='pug'>
-.userList
+.UserList
   userProfileBox
 </template>
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
-import userProfileBox from '@/components/userProfileBox.vue'
+import UserProfileBox from '@/components/UserProfileBox.vue'
 export default defineComponent({
-  name: "userList",
+  name: "UserList",
   components: {
-    userProfileBox,
+    UserProfileBox,
   }
 })
 </script>
