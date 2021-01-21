@@ -11,7 +11,7 @@
 					|  | 
 					router-link(to='/about') About
 					|  | 
-					button(@click="gotoFindBuddies") Find Buddies
+					button(@click="goto('findbuddies')") Find Buddies
 					|  | 
 					router-link(to='/help') Help
 					|  | 
@@ -20,6 +20,15 @@
 			h3 Welcome, 
 			| {{ user.nickname }}
 			br
+			.notifications
+				.messages
+					img(src="@/assets/send-message-logo.png"
+					@click="goto('sendMessage')")
+					p(v-if="newMessage") {{ newMessage }}
+				.chats
+					img(src="@/assets/chat-logo.png"
+					@click="goto('chat')")
+					p(v-if="newChats") {{ }}
 			.buttons
 				button(@click="account") Account
 				button(@click="logout") Logout
@@ -29,7 +38,7 @@
 </template>
 
 <script lang='ts'>
-import {defineComponent, computed} from 'vue'
+import {defineComponent, computed, ref} from 'vue'
 import {useStore} from 'vuex'
 import router from '@/router'
 import firebase from 'firebase/app'
@@ -40,6 +49,8 @@ export default defineComponent({
 		const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
 		const user = computed(() => store.getters['user/getUser'])
 		const googleUser = computed(() => firebase.auth().currentUser)
+		const newMessage = ref(0)
+		const newChats = ref(0)
 // ============================================================================
 		async function logout() {
 			await store.dispatch('user/Logout')
@@ -60,8 +71,15 @@ export default defineComponent({
 				window.location.reload()
 			})
 		}
+		function goto(place: string) {
+			console.log(`${place}`)
+			router.push(`/${place}`).then(() => {
+				window.location.reload()
+			})
+		}
 // ============================================================================
-		return {isAuthenticated,user,logout,account,gotoFindBuddies}
+		return {isAuthenticated,user,logout,account,gotoFindBuddies,newMessage,
+		newChats,goto}
 	}
 })
 </script>
@@ -113,6 +131,28 @@ export default defineComponent({
 			font-weight bold
 			h3
 				margin 0
+			.notifications
+				display flex
+				justify-content center
+				.messages, .chats
+					display flex
+					align-items center
+					justify-content center
+					width 50px
+					height 30px
+					img
+						width 30px
+						height 30px
+						cursor pointer
+						transition 0.3s ease 0s
+						&:hover
+							transform scale(1.3)
+					p
+						background-color red
+						color white
+						font-weight bold
+						border-radius 50%
+						width 20px
 			.buttons
 				button
 					margin 2px

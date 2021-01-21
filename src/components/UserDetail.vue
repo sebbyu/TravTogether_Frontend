@@ -36,7 +36,7 @@
         button(@click="goBack") Go Back
       div(v-else)
         button(@click="gotoChat") Chat
-        router-link(to="/message") Send Message
+        router-link(to="/sendMessage") Send Message
         button(@click="goBack") Go Back
   .update-info(v-else)
     .buttons

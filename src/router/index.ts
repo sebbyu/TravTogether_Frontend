@@ -60,7 +60,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Chat
   },
   {
-    path: '/message/',
+    path: '/sendMessage/',
     name: 'Message',
     component: Message
   },
@@ -69,6 +69,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Users',
     component: UserList
   },
+  // {
+  //   path: '/message/:nickname?',
+  //   name: 'Message',
+  //   component: User
+  // },
 ]
 
 const router = createRouter({
