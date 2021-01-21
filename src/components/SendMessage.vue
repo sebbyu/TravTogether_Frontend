@@ -51,9 +51,8 @@ export default defineComponent({
     const sent = ref()
 // ============================================================================
     const messageForm = {
-      name: "",
-      sendFrom: "",
-      sendTo: retrievedUser.value.email,
+      sender: user.nickname,
+      receiver: retrievedUser.value.nickname,
       subject: "",
       message: "",
     }
@@ -64,9 +63,11 @@ export default defineComponent({
 // ============================================================================
     async function sendMessage() {
       try {
-        await store.dispatch('user/SendEmail', messageForm)
+        await store.dispatch('user/SendMessage', messageForm)
         sent.value = true
         console.log("message sent")
+        messageForm.subject = ""
+        messageForm.message = ""
 
       } catch(error) {
         sent.value = false

@@ -11,7 +11,7 @@
 			h1 Contact Us
 		.mid-sec
 			.input
-				form(@submit.prevent="sendMessage")
+				form(@submit.prevent="contact")
 					.name
 						input(type='text' placeholder='Name' v-model="contactForm.name")
 					.email
@@ -59,14 +59,14 @@ export default defineComponent({
 			message: "",
 		}
 // ============================================================================
-		async function sendMessage() {
+		async function contact() {
 			if (isAuthenticated){
 					contactForm.sendFrom = user.email
 				}
 			if (contactForm.name && contactForm.subject && contactForm.message 
 			&& contactForm.sendFrom) {
 				try {
-					await store.dispatch("user/SendMessage", contactForm)
+					await store.dispatch("user/Contact", contactForm)
 					console.log("Message Sent")
 					sent.value = true
 					contactForm.name = ""
@@ -82,7 +82,7 @@ export default defineComponent({
 			}
 		}
 // ============================================================================
-		return {contactForm,sendMessage,sent,isAuthenticated,user}
+		return {contactForm,contact,sent,isAuthenticated,user}
 	}
 })
 </script>

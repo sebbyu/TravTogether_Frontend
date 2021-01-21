@@ -30,6 +30,8 @@
       p.text {{ retrievedUser.bio }}
     .buttons
       div(v-if="user && retrievedUser.nickname === user.nickname")
+        button Chats
+        button Messages
         button(@click="updating = !updating") Change Info
         button(@click="goBack") Go Back
       div(v-else)

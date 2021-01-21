@@ -191,14 +191,14 @@ export const actions: Action = {
     commit("logout")
   },
 // =====================================================
-  async SendMessage({commit}, contactForm) {
+  async Contact({commit}, contactForm) {
     const messageForm = new FormData()
     messageForm.append("name", contactForm.name)
     messageForm.append("sendFrom", contactForm.sendFrom)
     messageForm.append("subject", contactForm.subject)
     messageForm.append("message", contactForm.message)
     try {
-      await axios.post(LOCALHOST+"/sendmessage/", messageForm)
+      await axios.post(LOCALHOST+"/contact/", messageForm)
       commit('setErrorMessage', "")
     } catch (error) {
       console.log(error.message + " ERROR SENDING MESSAGE")
@@ -206,20 +206,17 @@ export const actions: Action = {
     }
   },
 // =====================================================
-  async SendEmail({commit, state}, Form) {
+  async SendMessage({commit}, Form) {
     const messageForm = new FormData()
-    if (state.user) {
-      messageForm.append('name', state.user.nickname)
-      messageForm.append('sendFrom', state.user.email)
-    }
-    messageForm.append("name", Form.sendTo)
-    messageForm.append("subject", Form.subject)
-    messageForm.append("message", Form.message)
+    messageForm.append('subject', Form.subject)
+    messageForm.append('message', Form.message)
+    messageForm.append('sender', Form.sender)
+    messageForm.append('receiver', Form.receiver)
     try {
-      await axios.post(LOCALHOST+"/sendemail/", messageForm)
+      await axios.post(LOCALHOST+"/sendMessage/", messageForm)
       commit('setErrorMessage', "")
-    } catch (error) {
-      console.log(error.message + " ERROR SENDING MESSAGE")
+    } catch(error) {
+      console.log(error.message)
       commit('setErrorMessage', error.message)
     }
   },
